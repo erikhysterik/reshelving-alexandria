@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports = {
   siteMetadata: {
     title: `Omega Gatsby`,
@@ -9,5 +11,30 @@ module.exports = {
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
     `gatsby-transformer-remark`,
+    {
+      resolve: `gatsby-source-mysql`,
+      options: {
+        connectionDetails: {
+          host: `${process.env.MYSQL_HOST}`,
+          user: `${process.env.MYSQL_USER}`,
+          password: `${process.env.MYSQL_PW}`,
+          database: `${process.env.MYSQL_DB}`
+        },
+        queries: [
+          {
+            statement: 'SELECT * FROM book',
+            idFieldName: 'cs_rid',
+            name: 'book'
+          }
+        ]
+      }
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `pages`,
+        path: `${__dirname}/src/pages/`,
+      },
+    },
   ],
 };
