@@ -42,7 +42,7 @@ function BookDetails(props) {
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box pt={["40px", null, null, "75px"]}>
               <Box>
-                    <Title variant="hero">{mysqlBook.title}</Title>
+                    <Title variant="hero">{mysqlBook.title + " - " + mysqlBook.sort_title}</Title>
                   </Box>
                   </Box>
               </Col>
@@ -62,6 +62,7 @@ export const query = graphql`
       title
       description
       reference
+      sort_title
     }
   }
 `

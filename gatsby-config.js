@@ -22,7 +22,7 @@ module.exports = {
         },
         queries: [
           {
-            statement: 'SELECT * FROM book',
+            statement: "SELECT * FROM book WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC",
             idFieldName: 'cs_rid',
             name: 'book'
           }
