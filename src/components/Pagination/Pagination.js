@@ -41,3 +41,33 @@ export const PageItem = (props) => (
     <PaginationStyled.Item {...props} />
   </>
 );
+
+export const PagePrev = (props) => (
+  <>
+    <PaginationStyled.Prev {...props} />
+  </>
+);
+
+export const PageFirst = (props) => (
+  <>
+    <PaginationStyled.First {...props} />
+  </>
+);
+
+export const PageNext = (props) => (
+  <>
+    <PaginationStyled.Next {...props} />
+  </>
+);
+
+export const PageLast = (props) => (
+  <>
+    <PaginationStyled.Last {...props} />
+  </>
+);
+
+export const PageEllipsis = (props) => (
+  <>
+    <PaginationStyled.Ellipsis {...props} />
+  </>
+);

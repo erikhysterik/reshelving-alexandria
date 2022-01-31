@@ -1,9 +1,10 @@
 import * as React from "react"
 import { graphql } from "gatsby"
 import PageWrapper from "../../components/PageWrapper";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "react-bootstrap";
 import { Title, Box } from "../../components/Core";
 import styled from "styled-components";
+import { Link } from 'gatsby'
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -30,6 +31,13 @@ function BookDetails(props) {
           <BoxStyled>
           <div className="pt-5 mt-5"></div>
       <Container>
+      <Row>
+          <Breadcrumb>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/database'}} title="Database Home" active={false} >Database Home</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/book/' + mysqlBook.reference}} title={mysqlBook.title} active={true} >{mysqlBook.title}</BreadcrumbItem>
+          </Breadcrumb>
+      </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box pt={["40px", null, null, "75px"]}>
