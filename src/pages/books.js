@@ -6,6 +6,7 @@ import { Title, Box, A } from "../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
+import { deEntitize } from "../utils";
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -83,7 +84,7 @@ function Books(props) {
           <tbody>
         {tagList.map((item, ind) => {
           return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + item.node.reference)} >
-              <td>{item.node.title.replace(/&#(\d+);/g, function(match, dec) {return String.fromCharCode(dec);})}</td>
+              <td>{deEntitize(item.node.title)}</td>
               <td>Coming Soon</td>
               <td>{item.node.publication_date}</td>
               </tr>;
