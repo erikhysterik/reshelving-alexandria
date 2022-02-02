@@ -118,7 +118,7 @@ function BookDetails(props) {
                   }
                   {mysqlBook.cc_health &&
                   <Accordion.Item eventKey="3">
-                      <Accordion.Header>Health</Accordion.Header>
+                      <Accordion.Header>Emotional Health</Accordion.Header>
                       <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_health}}>
                       </Accordion.Body>
                   </Accordion.Item>
@@ -169,7 +169,7 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Tags</Card.Subtitle>
-              { mysqlBook.tags.split(',').map((v, i) => <Badge key={i} bg='primary'>{v.trim()}</Badge>)}
+              { mysqlBook.tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'>{v.trim()}</Badge><span> </span></>)}
               </Card.Body>
           </Card>
       </Col>
