@@ -5,7 +5,7 @@ import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion
 import { Title, Box } from "../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import { deEntitize } from "../../utils";
+import { deEntitize, slugify } from "../../utils";
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -168,8 +168,20 @@ function BookDetails(props) {
               </Accordion>
               </Card.Body>
               <Card.Body>
+              <Card.Subtitle>Subjects</Card.Subtitle>
+              { mysqlBook.subject.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              </Card.Body>
+              <Card.Body>
               <Card.Subtitle>Tags</Card.Subtitle>
-              { mysqlBook.tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'>{v.trim()}</Badge><span> </span></>)}
+              { mysqlBook.tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              </Card.Body>
+              <Card.Body>
+              <Card.Subtitle>Secondary Tags</Card.Subtitle>
+              { mysqlBook.secondary_tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              </Card.Body>
+              <Card.Body>
+              <Card.Subtitle>Illustration Tags</Card.Subtitle>
+              { mysqlBook.illustration_tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
               </Card.Body>
           </Card>
       </Col>
@@ -210,6 +222,9 @@ export const query = graphql`
       publisher
       publication_date
       disclaimers
+      secondary_tags
+      illustration_tags
+      subject
     }
   }
 `

@@ -25,6 +25,11 @@ module.exports = {
             statement: "SELECT * FROM book WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC",
             idFieldName: 'cs_rid',
             name: 'book'
+          },
+          {
+            statement: "SELECT id, trim(tag) FROM alltags where trim(tag) in (select distinct(trim(tag)))",
+            idFieldName: 'id',
+            name: 'tag'
           }
         ]
       }
