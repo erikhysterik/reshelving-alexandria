@@ -169,19 +169,19 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Subjects</Card.Subtitle>
-              { mysqlBook.subject.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Tags</Card.Subtitle>
-              { mysqlBook.tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Secondary Tags</Card.Subtitle>
-              { mysqlBook.secondary_tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Illustration Tags</Card.Subtitle>
-              { mysqlBook.illustration_tags.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>)}
+              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='secondary'><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Body>
           </Card>
       </Col>
