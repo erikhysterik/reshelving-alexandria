@@ -43,7 +43,7 @@ exports.createPages = ({ graphql, actions }) => {
         // Create blog post pages.
         console.log("past import")
     result.data.allMysqlTag.edges.forEach(edge => {
-      console.log("createpage for <" + edge.node.trim_tag_ + ">")
+      //console.log("createpage for <" + edge.node.trim_tag_ + ">")
       // should not be necessary!!!
       if (edge.node.trim_tag_) {
         createPage({

@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
 import { deEntitize } from "../utils";
+const _ = require('lodash');
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -36,12 +37,21 @@ function Tag(props) {
     const afterPageClicked = (page_number) => {
       setCurrPage(page_number);
       
-      let endex = Math.min((page_number * 50), allMysqlBook.edges.length);
+      let endex = Math.min((page_number * 50), mergedBooks.length);
 
-       setTagList(allMysqlBook.edges.slice(((page_number-1)*50), endex));
+       setTagList(mergedBooks.slice(((page_number-1)*50), endex));
     };
 
-    const { allMysqlBook } = props.data
+    const { bookTags, bookSubject, bookIllTags, bookSecTags } = props.data
+    let mergedBooks = []
+    mergedBooks = 
+    _.chain(mergedBooks)    
+    .unionWith(bookTags?.edges, bookSubject?.edges, bookIllTags?.edges, bookSecTags?.edges, _.isEqual)
+    .sortBy([(b) => b.node.title])
+    .value()
+
+    console.log(mergedBooks)
+    
 
   return (
     <>
@@ -68,7 +78,7 @@ function Tag(props) {
             <Row>
                 <Col>
     <CustomPagination
-      totPages={allMysqlBook.edges.length % 50 ? allMysqlBook.edges.length / 50 + 1 : allMysqlBook.edges.length / 50 }
+      totPages={mergedBooks.length % 50 ? mergedBooks.length / 50 + 1 : mergedBooks.length / 50 }
       currentPage={currPage}
       pageClicked={(ele) => {
         afterPageClicked(ele);
@@ -104,14 +114,45 @@ export default Tag
 
 export const query = graphql`
 query MyTagQuery ($globtag: String!) {
-    allMysqlBook(filter: {tags: {glob: $globtag}}) {
+    bookTags: allMysqlBook(filter: {tags: {glob: $globtag}}) {
        edges {
          node {
+            cs_rid
             id
             title
             reference
         }
       }
+    }
+    bookSubject: allMysqlBook(filter: {subject: {glob: $globtag}}) {
+        edges {
+          node {
+             cs_rid
+             id
+             title
+             reference
+         }
+       }
+    }
+    bookIllTags: allMysqlBook(filter: {illustration_tags: {glob: $globtag}}) {
+        edges {
+          node {
+             cs_rid
+             id
+             title
+             reference
+         }
+       }
+    }
+    bookSecTags: allMysqlBook(filter: {secondary_tags: {glob: $globtag}}) {
+        edges {
+          node {
+             cs_rid
+             id
+             title
+             reference
+         }
+       }
     }
   }
 `
