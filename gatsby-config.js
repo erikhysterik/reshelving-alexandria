@@ -27,7 +27,7 @@ module.exports = {
             name: 'book'
           },
           {
-            statement: "SELECT id, trim(tag) FROM alltags where trim(tag) in (select distinct(trim(tag)))",
+            statement: "SELECT * FROM alltags group by tag",
             idFieldName: 'id',
             name: 'tag'
           }

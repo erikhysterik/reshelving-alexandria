@@ -17,10 +17,10 @@ exports.createPages = ({ graphql, actions }) => {
   // Query tags
   return graphql(`
   query MyTagQuery {
-    allMysqlTag (limit: 1000) {
+    allMysqlTag {
       edges {
         node {
-          trim_tag_
+          tag
         }
       }
     }
@@ -29,7 +29,6 @@ exports.createPages = ({ graphql, actions }) => {
     if (result.errors) {
       throw result.errors
     }
-    console.log("past gql")
     const slugify = (text) => {
       return text
         .toString()                           // Cast to string (optional)
@@ -40,19 +39,18 @@ exports.createPages = ({ graphql, actions }) => {
         .replace(/[^\w\-]+/g, '')     // Remove all non-word chars
         .replace(/\-\-+/g, '-');        // Replace multiple - with single -
   };
-        // Create blog post pages.
-        console.log("past import")
+        // Create tag pages.
     result.data.allMysqlTag.edges.forEach(edge => {
       //console.log("createpage for <" + edge.node.trim_tag_ + ">")
       // should not be necessary!!!
-      if (edge.node.trim_tag_) {
+      //if (edge.node.tag) {
         createPage({
           // Path for this page — required
-          path: `/tag/${slugify(edge.node.trim_tag_)}`,
+          path: `/tag/${slugify(edge.node.tag)}`,
           component: tagTemplate,
           context: {
-            tag: edge.node.trim_tag_,
-            globtag: "*" + edge.node.trim_tag_ + "*"
+            tag: edge.node.tag,
+            globtag: "*" + edge.node.tag + "*"
             // Add optional context data to be inserted
             // as props into the page component.
             //
@@ -63,7 +61,7 @@ exports.createPages = ({ graphql, actions }) => {
             // argument.
           },
         })
-      }
+      //}
       
     })
     }

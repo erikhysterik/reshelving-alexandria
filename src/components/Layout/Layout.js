@@ -119,7 +119,7 @@ const Layout = ({ children, pageContext }) => {
         }
       >
         <GlobalStyle />
-        <Helmet>
+        <Helmet htmlAttributes={{ lang: 'en' }}>
           <title>Omega</title>
           <link rel="icon" type="image/png" href={imgFavicon} />
         </Helmet>
@@ -145,7 +145,7 @@ const Layout = ({ children, pageContext }) => {
         }
       >
         <GlobalStyle />
-        <Helmet>
+        <Helmet htmlAttributes={{ lang: 'en' }}>
           <title>Omega</title>
           <link rel="icon" type="image/png" href={imgFavicon} />
         </Helmet>

@@ -48,10 +48,7 @@ function Tag(props) {
     _.chain(mergedBooks)    
     .unionWith(bookTags?.edges, bookSubject?.edges, bookIllTags?.edges, bookSecTags?.edges, _.isEqual)
     .sortBy([(b) => b.node.title])
-    .value()
-
-    console.log(mergedBooks)
-    
+    .value()    
 
   return (
     <>
