@@ -41,9 +41,6 @@ exports.createPages = ({ graphql, actions }) => {
   };
         // Create tag pages.
     result.data.allMysqlTag.edges.forEach(edge => {
-      //console.log("createpage for <" + edge.node.trim_tag_ + ">")
-      // should not be necessary!!!
-      //if (edge.node.tag) {
         createPage({
           // Path for this page — required
           path: `/tag/${slugify(edge.node.tag)}`,
@@ -61,8 +58,6 @@ exports.createPages = ({ graphql, actions }) => {
             // argument.
           },
         })
-      //}
-      
     })
     }
     )
