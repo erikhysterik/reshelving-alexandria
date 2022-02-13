@@ -1,6 +1,6 @@
 const path = require('path');
-const Seg = require('segfault-handler')
-Seg.registerHandler('crash.log')
+const _ = require('lodash');
+const slugify = require('@sindresorhus/slugify');
 
 exports.onCreatePage = ({ page, actions }) => {
   const { createPage } = actions;
@@ -29,7 +29,7 @@ exports.createPages = ({ graphql, actions }) => {
     if (result.errors) {
       throw result.errors
     }
-    const slugify = (text) => {
+    /*const slugify = (text) => {
       return text
         .toString()                           // Cast to string (optional)
         .normalize('NFKD')            // The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
@@ -38,16 +38,24 @@ exports.createPages = ({ graphql, actions }) => {
         .replace(/\s+/g, '-')            // Replace spaces with -
         .replace(/[^\w\-]+/g, '')     // Remove all non-word chars
         .replace(/\-\-+/g, '-');        // Replace multiple - with single -
-  };
-        // Create tag pages.
+  };*/
+  //const argh = result.data.allMysqlTag.edges.map(entry => slugify(entry.node.tag, {lower: true}));
+  
+  //const argh2 = argh.filter((a, i) => argh.indexOf(a) !== i)
+  //argh2.forEach(a => console.log(a))
+
+
+  // Create tag pages.
     result.data.allMysqlTag.edges.forEach(edge => {
+      //console.log(_.escapeRegExp("/(" + edge.node.tag + ")\s*(?:,|$)/gm"))
+
         createPage({
           // Path for this page — required
-          path: `/tag/${slugify(edge.node.tag)}`,
+          path: `/tag/${slugify(edge.node.tag, {lower: true})}`,
           component: tagTemplate,
           context: {
             tag: edge.node.tag,
-            globtag: "*" + edge.node.tag + "*"
+            regextag: "/(" + _.escapeRegExp(edge.node.tag) + ")\\s*(?:,|$)/gm"
             // Add optional context data to be inserted
             // as props into the page component.
             //

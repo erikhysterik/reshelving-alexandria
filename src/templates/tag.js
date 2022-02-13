@@ -45,6 +45,7 @@ function Tag(props) {
     const { bookTags, bookSubject, bookIllTags, bookSecTags } = props.data
     let mergedBooks = []
     mergedBooks = 
+    //_.merge(bookTags?.edges ?? [], bookSubject?.edges ?? [], bookIllTags?.edges ?? [], bookSecTags?.edges ?? [])
     _.chain(mergedBooks)    
     .unionWith(bookTags?.edges, bookSubject?.edges, bookIllTags?.edges, bookSecTags?.edges, _.isEqual)
     .sortBy([(b) => b.node.title])
@@ -110,8 +111,8 @@ function Tag(props) {
 export default Tag
 
 export const query = graphql`
-query MyTagQuery ($globtag: String!) {
-    bookTags: allMysqlBook(filter: {tags: {glob: $globtag}}) {
+query MyTagQuery ($regextag: String!) {
+    bookTags: allMysqlBook(filter: {tags: {regex: $regextag}}) {
        edges {
          node {
             cs_rid
@@ -121,7 +122,7 @@ query MyTagQuery ($globtag: String!) {
         }
       }
     }
-    bookSubject: allMysqlBook(filter: {subject: {glob: $globtag}}) {
+    bookSubject: allMysqlBook(filter: {subject: {regex: $regextag}}) {
         edges {
           node {
              cs_rid
@@ -131,7 +132,7 @@ query MyTagQuery ($globtag: String!) {
          }
        }
     }
-    bookIllTags: allMysqlBook(filter: {illustration_tags: {glob: $globtag}}) {
+    bookIllTags: allMysqlBook(filter: {illustration_tags: {regex: $regextag}}) {
         edges {
           node {
              cs_rid
@@ -141,7 +142,7 @@ query MyTagQuery ($globtag: String!) {
          }
        }
     }
-    bookSecTags: allMysqlBook(filter: {secondary_tags: {glob: $globtag}}) {
+    bookSecTags: allMysqlBook(filter: {secondary_tags: {regex: $regextag}}) {
         edges {
           node {
              cs_rid

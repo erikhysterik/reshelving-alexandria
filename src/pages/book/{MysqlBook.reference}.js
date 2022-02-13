@@ -5,7 +5,8 @@ import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion
 import { Title, Box } from "../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import { deEntitize, slugify } from "../../utils";
+import { deEntitize } from "../../utils";
+const slugify = require('@sindresorhus/slugify');
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -171,7 +172,7 @@ function BookDetails(props) {
               <Card.Subtitle>Subjects</Card.Subtitle>
               { mysqlBook.subject &&
               <Card.Title>
-              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -179,7 +180,7 @@ function BookDetails(props) {
               <Card.Subtitle>Tags</Card.Subtitle>
               { mysqlBook.tags &&
               <Card.Title>
-              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -187,7 +188,7 @@ function BookDetails(props) {
               <Card.Subtitle>Secondary Tags</Card.Subtitle>
               { mysqlBook.secondary_tags &&
               <Card.Title>
-              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -195,7 +196,7 @@ function BookDetails(props) {
               <Card.Subtitle>Illustration Tags</Card.Subtitle>
               { mysqlBook.illustration_tags &&
               <Card.Title>
-              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim())}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
