@@ -1,12 +1,12 @@
 import * as React from "react"
 import { graphql } from "gatsby"
-import PageWrapper from "../../components/PageWrapper";
+import PageWrapper from "../../../components/PageWrapper";
 import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion } from "react-bootstrap";
-import { Title, Box } from "../../components/Core";
+import { Title, Box } from "../../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import { deEntitize } from "../../utils";
-import Search from '../../components/search'
+import { deEntitize } from "../../../utils";
+import Search from '../../../components/search'
 
 const slugify = require('@sindresorhus/slugify');
 
@@ -41,8 +41,8 @@ function BookDetails(props) {
         <Col>
           <Breadcrumb>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/book/' + mysqlBook.reference}} title={deEntitize(mysqlBook.title)} active={true} >{deEntitize(mysqlBook.title)}</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/books'}} title="Books" active={false} >Books</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/book/' + mysqlBook.reference}} title={deEntitize(mysqlBook.title)} active={true} >{deEntitize(mysqlBook.title)}</BreadcrumbItem>
           </Breadcrumb>
          </Col>
          <Col xs={2}>
@@ -181,7 +181,7 @@ function BookDetails(props) {
               <Card.Subtitle>Subjects</Card.Subtitle>
               { mysqlBook.subject &&
               <Card.Title>
-              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -189,7 +189,7 @@ function BookDetails(props) {
               <Card.Subtitle>Tags</Card.Subtitle>
               { mysqlBook.tags &&
               <Card.Title>
-              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -197,7 +197,7 @@ function BookDetails(props) {
               <Card.Subtitle>Secondary Tags</Card.Subtitle>
               { mysqlBook.secondary_tags &&
               <Card.Title>
-              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>
@@ -205,7 +205,7 @@ function BookDetails(props) {
               <Card.Subtitle>Illustration Tags</Card.Subtitle>
               { mysqlBook.illustration_tags &&
               <Card.Title>
-              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
               </Card.Title>
               }
               </Card.Body>

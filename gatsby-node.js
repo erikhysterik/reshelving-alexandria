@@ -42,7 +42,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         createPage({
           // Path for this page — required
-          path: `/tag/${slugify(edge.node.tag, {lower: true})}`,
+          path: `/legacy-library/tag/${slugify(edge.node.tag, {lower: true})}`,
           component: tagTemplate,
           context: {
             tag: edge.node.tag,

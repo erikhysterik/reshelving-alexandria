@@ -1,7 +1,7 @@
 import React, {useRef} from "react"
 import { connectSearchBox } from "react-instantsearch-dom"
 import { Search as SearchIcon } from "@styled-icons/fa-solid"
-import { Form, InputGroup } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 
 export default connectSearchBox(
   ({ refine, currentRefinement, className, onFocus }) => {

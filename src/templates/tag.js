@@ -2,7 +2,7 @@ import * as React from "react"
 import { graphql, navigate } from "gatsby"
 import PageWrapper from "../components/PageWrapper";
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Table } from "react-bootstrap";
-import { Title, Box, A } from "../components/Core";
+import { Title, Box } from "../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
@@ -66,8 +66,8 @@ function Tag(props) {
         <Col>
         <Breadcrumb>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/tag'}} title="Books By Tag" active={true} >Books By Tag</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/books'}} title="Books" active={false} >Books</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/tag'}} title="By Tag" active={true} >By Tag</BreadcrumbItem>
           </Breadcrumb>
          </Col>
          <Col xs={2}>
@@ -78,7 +78,7 @@ function Tag(props) {
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box pt={["40px", null, null, "75px"]}>
               <Box>
-                    <Title variant="hero">Books by tag: {props.pageContext.tag}</Title>
+                    <Title variant="hero">Tag: {props.pageContext.tag}</Title>
                   </Box>
                   </Box>
               </Col>
@@ -101,7 +101,7 @@ function Tag(props) {
           </thead>
           <tbody>
         {tagList.map((item, ind) => {
-          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + slugify(item.node.reference))} >
+          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/legacy-library/book/' + slugify(item.node.reference))} >
               <td>{deEntitize(item.node.title)}</td>
               <td>Coming Soon</td>
               </tr>;

@@ -1,11 +1,15 @@
 import * as React from "react"
 import { graphql, navigate } from "gatsby"
-import PageWrapper from "../components/PageWrapper";
+import PageWrapper from "../../components/PageWrapper";
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Table } from "react-bootstrap";
-import { Title, Box, A } from "../components/Core";
+import { Title, Box } from "../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import Search from '../components/search'
+import CustomPagination from "../../components/CustomPagination";
+import { deEntitize } from "../../utils";
+import Search from '../../components/search'
+
+const slugify = require('@sindresorhus/slugify')
 
 const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 
@@ -26,7 +30,7 @@ const BoxStyled = styled(Box)`
   }
 `;
 
-function LegacyLibrary(props) {
+function Books(props) {
     const [tagList, setTagList] = React.useState([]);
     const [currPage, setCurrPage] = React.useState(1);
   
@@ -51,11 +55,11 @@ function LegacyLibrary(props) {
           <div className="pt-5 mt-5"></div>
       <Container>
       <Row className="d-flex align-items-center">
-        <Col >
-          <Breadcrumb  >
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={true} >Legacy Library</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
-         </Breadcrumb>
+        <Col>
+        <Breadcrumb>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Database Home" active={false} >Database Home</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/books'}} title="Books" active={true} >Books</BreadcrumbItem>
+          </Breadcrumb>
          </Col>
          <Col xs={2}>
          <Search className="float-end" indices={searchIndices} />
@@ -65,14 +69,39 @@ function LegacyLibrary(props) {
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box pt={["40px", null, null, "75px"]}>
               <Box>
-                    <Title variant="hero">Legacy Library</Title>
+                    <Title variant="hero">All Books</Title>
                   </Box>
                   </Box>
               </Col>
             </Row>
             <Row>
                 <Col>
-                   
+    <CustomPagination
+      totPages={allMysqlBook.edges.length % 50 ? allMysqlBook.edges.length / 50 + 1 : allMysqlBook.edges.length / 50 }
+      currentPage={currPage}
+      pageClicked={(ele) => {
+        afterPageClicked(ele);
+      }}
+    >
+      <Table striped bordered hover size="sm" variant="dark">
+          <thead>
+              <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Published</th>
+              </tr>
+          </thead>
+          <tbody>
+        {tagList.map((item, ind) => {
+          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/legacy-library/book/' + slugify(item.node.reference))} >
+              <td>{deEntitize(item.node.title)}</td>
+              <td>Coming Soon</td>
+              <td>{item.node.publication_date}</td>
+              </tr>;
+        })}
+        </tbody>
+      </Table>
+    </CustomPagination>
                 </Col>
             </Row>
       </Container>
@@ -82,7 +111,7 @@ function LegacyLibrary(props) {
     )
 }
 
-export default LegacyLibrary
+export default Books
 
 export const query = graphql`
   query {

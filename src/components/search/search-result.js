@@ -22,7 +22,7 @@ const HitCount = connectStateResults(({ searchResults }) => {
 
 const PageHit = ({ hit }) => (
   <div>
-    <Link to={"/book/" + slugify(hit.reference)}>
+    <Link to={"/legacy-library/book/" + slugify(hit.reference)}>
       <h4>
         <Highlight attribute="title" hit={hit} tagName="mark" />
       </h4>
