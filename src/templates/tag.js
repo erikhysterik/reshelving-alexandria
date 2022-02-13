@@ -7,8 +7,12 @@ import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
 import { deEntitize } from "../utils";
+import Search from '../components/search'
+
 const _ = require('lodash');
 const slugify = require('@sindresorhus/slugify');
+
+const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -58,12 +62,17 @@ function Tag(props) {
           <BoxStyled>
           <div className="pt-5 mt-5"></div>
       <Container>
-      <Row>
-          <Breadcrumb>
+      <Row className="d-flex align-items-center">
+        <Col>
+        <Breadcrumb>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/tag'}} title="Books By Tag" active={false} >Books By Tag</BreadcrumbItem>
           </Breadcrumb>
+         </Col>
+         <Col xs={2}>
+         <Search className="float-end" indices={searchIndices} />
+         </Col>
       </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">

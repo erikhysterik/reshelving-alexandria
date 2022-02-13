@@ -116,6 +116,15 @@ module.exports = {
         continueOnFailure: false, // default: false, don't fail the build if algolia indexing fails
         algoliasearchOptions: undefined, // default: { timeouts: { connect: 1, read: 30, write: 30 } }, pass any different options to the algoliasearch constructor
       },
-    }
+    },
+    {
+      resolve: `gatsby-plugin-nprogress`,
+      options: {
+        // Setting a color is optional.
+        //color: `tomato`,
+        // Enable the loading spinner.
+        showSpinner: true,
+      },
+    },
   ],
 };

@@ -3653,6 +3653,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"accessible-nprogress@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "accessible-nprogress@npm:2.1.2"
+  checksum: b42d79cba0be61aa991f7bbe6490d28d9954874c1168449cd186bddd83fc7d056fcdfef915f9e1bd87812a4fd26ed454a7f2879c80c32739408e8e6284315637
+  languageName: node
+  linkType: hard
+
 "acorn-import-assertions@npm:^1.7.6":
   version: 1.8.0
   resolution: "acorn-import-assertions@npm:1.8.0"
@@ -7979,6 +7986,18 @@ __metadata:
   peerDependencies:
     gatsby: ^2.0.0 || ^3.0.0 || ^4.0.0
   checksum: 1f6c3b8636a30f512e95f69461505adedd06d27d84e42d62bf8d04e51b01d5b7c4882837fdd0d210af3af5418890f0544c65bb96f6215a1005402fdd20df605b
+  languageName: node
+  linkType: hard
+
+"gatsby-plugin-nprogress@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "gatsby-plugin-nprogress@npm:4.7.0"
+  dependencies:
+    "@babel/runtime": ^7.15.4
+    accessible-nprogress: ^2.1.2
+  peerDependencies:
+    gatsby: ^4.0.0-next
+  checksum: def0c8837ad13f2d4c75275b4f13007eea914cd11291c61efcfe1875ca2d856541b950c2bd6c770a07435fd02efbf50d86f3c0f1238103baa54d7f1b70c1432d
   languageName: node
   linkType: hard
 
@@ -12329,6 +12348,7 @@ __metadata:
     gatsby: ^4.6.0
     gatsby-image: ^3.11.0
     gatsby-plugin-algolia: ^0.26.0
+    gatsby-plugin-nprogress: ^4.7.0
     gatsby-plugin-react-helmet: ^5.6.0
     gatsby-plugin-sass: ^5.6.0
     gatsby-plugin-sharp: ^4.6.0

@@ -50,11 +50,16 @@ function LegacyLibrary(props) {
           <BoxStyled>
           <div className="pt-5 mt-5"></div>
       <Container>
-      <Row>
-          <Breadcrumb>
+      <Row className="d-flex align-items-center">
+        <Col >
+          <Breadcrumb  >
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={true} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
          </Breadcrumb>
+         </Col>
+         <Col xs={2}>
+         <Search className="float-end" indices={searchIndices} />
+         </Col>
       </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
@@ -67,7 +72,7 @@ function LegacyLibrary(props) {
             </Row>
             <Row>
                 <Col>
-                   <Search indices={searchIndices} />
+                   
                 </Col>
             </Row>
       </Container>
