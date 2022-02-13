@@ -40,6 +40,7 @@ export default styled(SearchBox)`
     width: 1em;
     margin: 0.3em;
     color: ${({ theme }) => theme.foreground};
-    pointer-events: none;
+    pointer-events: all;
+    cursor: pointer;
   }
 `

@@ -67,7 +67,7 @@ function Tag(props) {
         <Breadcrumb>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/tag'}} title="Books By Tag" active={false} >Books By Tag</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/tag'}} title="Books By Tag" active={true} >Books By Tag</BreadcrumbItem>
           </Breadcrumb>
          </Col>
          <Col xs={2}>
