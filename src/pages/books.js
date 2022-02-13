@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
 import { deEntitize } from "../utils";
+const slugify = require('@sindresorhus/slugify')
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -83,7 +84,7 @@ function Books(props) {
           </thead>
           <tbody>
         {tagList.map((item, ind) => {
-          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + item.node.reference)} >
+          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + slugify(item.node.reference))} >
               <td>{deEntitize(item.node.title)}</td>
               <td>Coming Soon</td>
               <td>{item.node.publication_date}</td>

@@ -35,7 +35,7 @@ function BookDetails(props) {
       <Container>
       <Row>
           <Breadcrumb>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/database'}} title="Database Home" active={false} >Database Home</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/book/' + mysqlBook.reference}} title={deEntitize(mysqlBook.title)} active={true} >{deEntitize(mysqlBook.title)}</BreadcrumbItem>
           </Breadcrumb>

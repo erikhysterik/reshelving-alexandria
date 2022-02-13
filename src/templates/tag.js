@@ -8,6 +8,7 @@ import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
 import { deEntitize } from "../utils";
 const _ = require('lodash');
+const slugify = require('@sindresorhus/slugify');
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -59,7 +60,7 @@ function Tag(props) {
       <Container>
       <Row>
           <Breadcrumb>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/database'}} title="Database Home" active={false} >Database Home</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/tag'}} title="Books By Tag" active={false} >Books By Tag</BreadcrumbItem>
           </Breadcrumb>
@@ -91,7 +92,7 @@ function Tag(props) {
           </thead>
           <tbody>
         {tagList.map((item, ind) => {
-          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + item.node.reference)} >
+          return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/book/' + slugify(item.node.reference))} >
               <td>{deEntitize(item.node.title)}</td>
               <td>Coming Soon</td>
               </tr>;

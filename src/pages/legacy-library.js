@@ -5,7 +5,9 @@ import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Table } from "react-bo
 import { Title, Box, A } from "../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import CustomPagination from "../components/CustomPagination";
+import Search from '../components/search'
+
+const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 
 const BoxStyled = styled(Box)`
   .block-title {
@@ -24,7 +26,7 @@ const BoxStyled = styled(Box)`
   }
 `;
 
-function Database(props) {
+function LegacyLibrary(props) {
     const [tagList, setTagList] = React.useState([]);
     const [currPage, setCurrPage] = React.useState(1);
   
@@ -50,7 +52,7 @@ function Database(props) {
       <Container>
       <Row>
           <Breadcrumb>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/database'}} title="Database Home" active={true} >Database Home</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={true} >Legacy Library</BreadcrumbItem>
           <BreadcrumbItem linkAs={Link} linkProps={{to: '/books'}} title="Books" active={false} >Books</BreadcrumbItem>
          </Breadcrumb>
       </Row>
@@ -58,39 +60,14 @@ function Database(props) {
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box pt={["40px", null, null, "75px"]}>
               <Box>
-                    <Title variant="hero">Database</Title>
+                    <Title variant="hero">Legacy Library</Title>
                   </Box>
                   </Box>
               </Col>
             </Row>
             <Row>
                 <Col>
-    <CustomPagination
-      totPages={allMysqlBook.edges.length % 50 ? allMysqlBook.edges.length / 50 + 1 : allMysqlBook.edges.length / 50 }
-      currentPage={currPage}
-      pageClicked={(ele) => {
-        afterPageClicked(ele);
-      }}
-    >
-      <Table striped bordered hover size="sm" variant="dark">
-          <thead>
-              <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Published</th>
-              </tr>
-          </thead>
-          <tbody>
-        {tagList.map((item, ind) => {
-          return <tr key={item.node.id + ind} onClick={() => navigate('/book/' + item.node.reference)} >
-              <td>{item.node.title}</td>
-              <td>Coming Soon</td>
-              <td>{item.node.publication_date}</td>
-              </tr>;
-        })}
-        </tbody>
-      </Table>
-    </CustomPagination>
+                   <Search indices={searchIndices} />
                 </Col>
             </Row>
       </Container>
@@ -100,7 +77,7 @@ function Database(props) {
     )
 }
 
-export default Database
+export default LegacyLibrary
 
 export const query = graphql`
   query {
