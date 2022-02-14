@@ -51,10 +51,8 @@ function BookDetails(props) {
       </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
-              <Box pt={["40px", null, null, "75px"]}>
               <Box>
                     <Title variant="hero">{deEntitize(mysqlBook.title)}</Title>
-                  </Box>
                   </Box>
               </Col>
             </Row>

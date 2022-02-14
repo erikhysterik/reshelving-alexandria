@@ -50,9 +50,8 @@ function Tag(props) {
     const { bookTags, bookSubject, bookIllTags, bookSecTags } = props.data
     let mergedBooks = []
     mergedBooks = 
-    //_.merge(bookTags?.edges ?? [], bookSubject?.edges ?? [], bookIllTags?.edges ?? [], bookSecTags?.edges ?? [])
     _.chain(mergedBooks)    
-    .unionWith(bookTags?.edges, bookSubject?.edges, bookIllTags?.edges, bookSecTags?.edges, _.isEqual)
+    .unionWith(bookTags?.edges ?? [], bookSubject?.edges ?? [], bookIllTags?.edges ?? [], bookSecTags?.edges ?? [], _.isEqual)
     .sortBy([(b) => b.node.title])
     .value()    
 
@@ -76,10 +75,8 @@ function Tag(props) {
       </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
-              <Box pt={["40px", null, null, "75px"]}>
               <Box>
                     <Title variant="hero">Tag: {props.pageContext.tag}</Title>
-                  </Box>
                   </Box>
               </Col>
             </Row>

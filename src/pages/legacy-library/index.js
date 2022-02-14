@@ -1,5 +1,4 @@
 import * as React from "react"
-import { graphql } from "gatsby"
 import PageWrapper from "../../components/PageWrapper";
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "react-bootstrap";
 import { Title, Box } from "../../components/Core";
@@ -47,10 +46,8 @@ function LegacyLibrary(props) {
       </Row>
       <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
-              <Box pt={["40px", null, null, "75px"]}>
               <Box>
                     <Title variant="hero">Legacy Library</Title>
-                  </Box>
                   </Box>
               </Col>
             </Row>
