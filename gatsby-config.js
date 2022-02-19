@@ -64,6 +64,7 @@ module.exports = {
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
     `gatsby-transformer-remark`,
+    `gatsby-plugin-use-query-params`,
     {
       resolve: `gatsby-source-mysql`,
       options: {

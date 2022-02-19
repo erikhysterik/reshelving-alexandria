@@ -4,7 +4,7 @@ import { Container, Row, Col, Breadcrumb, BreadcrumbItem } from "react-bootstrap
 import { Title, Box } from "../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
-import Search from '../../components/search'
+import SearchWidget from '../../components/SearchWidget'
 
 const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 
@@ -41,7 +41,7 @@ function LegacyLibrary(props) {
          </Breadcrumb>
          </Col>
          <Col xs={2}>
-         <Search className="float-end" indices={searchIndices} />
+         <SearchWidget className="float-end" indices={searchIndices} />
          </Col>
       </Row>
       <Row className="justify-content-center">

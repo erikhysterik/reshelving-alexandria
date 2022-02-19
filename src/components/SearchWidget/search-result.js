@@ -6,16 +6,17 @@ import {
   Hits,
   Index,
   Snippet,
-  PoweredBy,
 } from "react-instantsearch-dom"
 const slugify = require('@sindresorhus/slugify')
 
-const HitCount = connectStateResults(({ searchResults }) => {
+const HitCount = connectStateResults(({ searchState, searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits
 
   return hitCount > 0 ? (
     <div className="HitCount">
+      <Link to={"/legacy-library/search/?q=" + searchState.query} >
       {hitCount} result{hitCount !== 1 ? `s` : ``}
+      </Link>
     </div>
   ) : null
 })
@@ -43,7 +44,6 @@ const SearchResult = ({ indices, className }) => (
     {indices.map(index => (
       <HitsInIndex index={index} key={index.name} />
     ))}
-    <PoweredBy />
   </div>
 )
 

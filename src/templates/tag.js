@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { Link } from 'gatsby'
 import CustomPagination from "../components/CustomPagination";
 import { deEntitize } from "../utils";
-import Search from '../components/search'
+import SearchWidget from '../components/SearchWidget'
 
 const _ = require('lodash');
 const slugify = require('@sindresorhus/slugify');
@@ -70,7 +70,7 @@ function Tag(props) {
           </Breadcrumb>
          </Col>
          <Col xs={2}>
-         <Search className="float-end" indices={searchIndices} />
+         <SearchWidget className="float-end" indices={searchIndices} />
          </Col>
       </Row>
       <Row className="justify-content-center">

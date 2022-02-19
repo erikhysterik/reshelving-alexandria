@@ -13,7 +13,7 @@ const theme = {
   faded: "#888",
 }
 
-export default function Search({ indices }) {
+export default function SearchWidget({ indices }) {
   const rootRef = createRef()
   const [query, setQuery] = useState()
   const [hasFocus, setFocus] = useState(false)
