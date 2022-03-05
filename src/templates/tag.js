@@ -47,12 +47,40 @@ function Tag(props) {
        setTagList(mergedBooks.slice(((page_number-1)*50), endex));
     };
 
-    const { bookTags, bookSubject, bookIllTags, bookSecTags } = props.data
+    const { bookTags, 
+      bookSubject, 
+      bookIllTags, 
+      bookSecTags,
+      bookLocTags,
+      bookLeadNameTags,
+      bookLeadGenderTags,
+      bookLeadRaceTags,
+      bookLeadAgeTags,
+      bookLeadReligionTags,
+      bookLeadCharacterTags,
+      bookLeadPhysicalTags,
+      bookLeadVocationTags,
+      bookTaleNameTags
+    } = props.data
     let mergedBooks = []
     mergedBooks = 
     _.chain(mergedBooks)    
-    .unionWith(bookTags?.edges ?? [], bookSubject?.edges ?? [], bookIllTags?.edges ?? [], bookSecTags?.edges ?? [], _.isEqual)
-    .sortBy([(b) => b.node.title])
+    .unionWith(bookTags?.edges ?? [], 
+      bookSubject?.edges ?? [], 
+      bookIllTags?.edges ?? [], 
+      bookSecTags?.edges ?? [], 
+      bookLocTags?.edges ?? [], 
+      bookLeadNameTags?.edges ?? [], 
+      bookLeadGenderTags?.edges ?? [], 
+      bookLeadRaceTags?.edges ?? [],
+      bookLeadAgeTags?.edges ?? [],
+      bookLeadReligionTags?.edges ?? [],
+      bookLeadCharacterTags?.edges ?? [],
+      bookLeadPhysicalTags?.edges ?? [],
+      bookLeadVocationTags?.edges ?? [],
+      bookTaleNameTags?.edges ?? [],
+      _.isEqual)
+    .sortBy([(b) => b.node.sort_title])
     .value()    
 
   return (
@@ -158,6 +186,106 @@ query MyTagQuery ($regextag: String!) {
              reference
          }
        }
+    }
+    bookLocTags: allMysqlBook(filter: {location: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadNameTags: allMysqlBook(filter: {lead_name: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadGenderTags: allMysqlBook(filter: {lead_gender: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadRaceTags: allMysqlBook(filter: {lead_race_ethnicity_nationality: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadAgeTags: allMysqlBook(filter: {lead_age: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadReligionTags: allMysqlBook(filter: {lead_religion: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadCharacterTags: allMysqlBook(filter: {lead_character: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadPhysicalTags: allMysqlBook(filter: {lead_physical: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookLeadVocationTags: allMysqlBook(filter: {lead_vocation: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
+    }
+    bookTaleNameTags: allMysqlBook(filter: {tale_name: {regex: $regextag}}) {
+      edges {
+        node {
+           cs_rid
+           id
+           title
+           reference
+       }
+     }
     }
   }
 `

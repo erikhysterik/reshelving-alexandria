@@ -29,8 +29,77 @@ const BoxStyled = styled(Box)`
   }
 `;
 
+function BookTags(props) {
+    return (
+        <>
+            <Card.Body>
+            <Card.Subtitle>Tags</Card.Subtitle>
+              <div className="h5">
+              { props.children && 
+              <Accordion defaultActiveKey={[0]} alwaysOpen>
+               { props.children }
+              </Accordion>
+              }
+              { !props.children && "N/A" }
+              </div>
+            </Card.Body>
+        </>
+    );
+}
+
+function TagSection(props) {
+    return (
+        <>
+            <Accordion.Item eventKey={props.tagkey}>
+                <Accordion.Header>{props.header}</Accordion.Header>
+                <Accordion.Body>
+                    { props.tags?.split(',').filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+                </Accordion.Body>
+            </Accordion.Item>
+        </>
+    );
+}
+
+function ContentConsideration(props) {
+    const { tagkey, cc, header } = props;
+    return (
+        <>
+           <Accordion.Item eventKey={tagkey}>
+            <Accordion.Header>{header}</Accordion.Header>
+            <Accordion.Body dangerouslySetInnerHTML={{__html: cc}}>
+            </Accordion.Body>
+           </Accordion.Item>
+        </>
+    )
+}
+
 function BookDetails(props) {
   const { mysqlBook } = props.data
+  
+  const tagSections = [
+      { tags: mysqlBook.subject, section: "Subjects" },
+      { tags: mysqlBook.tags, section: "General" },
+      { tags: mysqlBook.secondary_tags, section: "Secondary" },
+      { tags: mysqlBook.illustration_tags, section: "Illustration" },
+      { tags: mysqlBook.location, section: "Location" },
+      { tags: [mysqlBook.lead_name,mysqlBook.lead_gender,mysqlBook.lead_race_ethnicity_nationality,mysqlBook.lead_age,mysqlBook.lead_religion,mysqlBook.lead_character,mysqlBook.lead_physical,mysqlBook.lead_vocation,mysqlBook.tale_name].filter(Boolean).join(","), section: "Lead Character"}
+  ].filter((x) => x.tags)
+  .map((v, i) => <><TagSection tagkey={i} tags={v.tags} header={v.section} /></>);
+
+  const ccSections = [
+      { cc: mysqlBook.disclaimers, header: "General"},
+      { cc: (mysqlBook.cc_behavior ?? "") + (mysqlBook.new_cc_behavior ?? ""), header: "Behavior"},
+      { cc: (mysqlBook.cc_discrimination ?? "") + (mysqlBook.new_cc_discrimination ?? ""), header: "Discrimination"},
+      { cc: (mysqlBook.cc_health ?? "") + (mysqlBook.new_cc_health ?? ""), header: "Emotional Health"},
+      { cc: (mysqlBook.cc_language ?? "") + (mysqlBook.new_cc_language ?? ""), header: "Language"},
+      { cc: (mysqlBook.cc_magic ?? "") + (mysqlBook.new_cc_magic ?? ""), header: "Magic"},
+      { cc: (mysqlBook.cc_religion ?? "") + (mysqlBook.new_cc_religion ?? ""), header: "Religion"},
+      { cc: (mysqlBook.cc_science ?? "") + (mysqlBook.new_cc_science ?? ""), header: "Science"},
+      { cc: (mysqlBook.cc_sexuality ?? "") + (mysqlBook.new_cc_sexuality ?? ""), header: "Sexuality"},
+      { cc: (mysqlBook.cc_violence_weapons ?? "") + (mysqlBook.new_cc_violence_weapons ?? ""), header: "Violence"}
+  ].filter((x) => x.cc)
+  .map((v, i) => <><ContentConsideration tagkey={i} cc={v.cc} header={v.header} /></>)
+
   return (
     <>
       <PageWrapper footerDark>
@@ -90,6 +159,10 @@ function BookDetails(props) {
                       Date
                   </Card.Subtitle>
                   <Card.Text>{mysqlBook.publication_date}</Card.Text>
+                  <Card.Subtitle>
+                      Pages
+                  </Card.Subtitle>
+                  <Card.Text>{mysqlBook.pages}</Card.Text>
               </Card.Body>
           </Card>
       </Col>
@@ -102,111 +175,14 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
               <Card.Subtitle>Content Considerations</Card.Subtitle>
+              { ccSections.length > 0 &&
               <Accordion>
-                  {mysqlBook.disclaimers &&
-                  <Accordion.Item eventKey="0">
-                      <Accordion.Header>General</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.disclaimers}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_behavior &&
-                  <Accordion.Item eventKey="1">
-                      <Accordion.Header>Behavior</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_behavior}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_discrimination &&
-                  <Accordion.Item eventKey="2">
-                      <Accordion.Header>Discrimination</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_discrimination}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_health &&
-                  <Accordion.Item eventKey="3">
-                      <Accordion.Header>Emotional Health</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_health}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_language &&
-                  <Accordion.Item eventKey="4">
-                      <Accordion.Header>Language</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_language}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_magic &&
-                  <Accordion.Item eventKey="5">
-                      <Accordion.Header>Magic</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_magic}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  {mysqlBook.cc_religion &&
-                  <Accordion.Item eventKey="6">
-                      <Accordion.Header>Religion</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_religion}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  { mysqlBook.cc_science &&
-                  <Accordion.Item eventKey="7">
-                      <Accordion.Header>Science</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_science}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  { mysqlBook.cc_sexuality &&
-                  <Accordion.Item eventKey="8">
-                      <Accordion.Header>Sexuality</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_sexuality}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
-                  { mysqlBook.cc_violence_weapons &&
-                  <Accordion.Item eventKey="9">
-                      <Accordion.Header>Violence</Accordion.Header>
-                      <Accordion.Body dangerouslySetInnerHTML={{__html: mysqlBook.cc_violence_weapons}}>
-                      </Accordion.Body>
-                  </Accordion.Item>
-                  }
+                  {ccSections}
               </Accordion>
-              </Card.Body>
-              <Card.Body>
-              <Card.Subtitle>Subjects</Card.Subtitle>
-              { mysqlBook.subject &&
-              <Card.Title>
-              { mysqlBook.subject?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
-              </Card.Title>
               }
+              { ccSections.length === 0 && <div className="h6">N/A</div>}
               </Card.Body>
-              <Card.Body>
-              <Card.Subtitle>Tags</Card.Subtitle>
-              { mysqlBook.tags &&
-              <Card.Title>
-              { mysqlBook.tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
-              </Card.Title>
-              }
-              </Card.Body>
-              <Card.Body>
-              <Card.Subtitle>Secondary Tags</Card.Subtitle>
-              { mysqlBook.secondary_tags &&
-              <Card.Title>
-              { mysqlBook.secondary_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
-              </Card.Title>
-              }
-              </Card.Body>
-              <Card.Body>
-              <Card.Subtitle>Illustration Tags</Card.Subtitle>
-              { mysqlBook.illustration_tags &&
-              <Card.Title>
-              { mysqlBook.illustration_tags?.split(',').map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
-              </Card.Title>
-              }
-              </Card.Body>
+              <BookTags>{tagSections}</BookTags>
           </Card>
       </Col>
   </Row>
@@ -249,6 +225,27 @@ export const query = graphql`
       secondary_tags
       illustration_tags
       subject
+      lead_name
+      lead_gender
+      lead_race_ethnicity_nationality
+      lead_age
+      lead_religion
+      lead_character
+      lead_physical
+      lead_vocation
+      tale_name
+      new_cc_behavior
+      new_cc_discrimination
+      new_cc_health
+      new_cc_language
+      new_cc_magic
+      new_cc_religion
+      new_cc_science
+      new_cc_sexuality
+      new_cc_themes
+      new_cc_violence_weapons
+      new_cc_witchcraft
+      pages
     }
   }
 `

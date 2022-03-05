@@ -76,7 +76,20 @@ module.exports = {
         },
         queries: [
           {
-            statement: "SELECT * FROM book WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC",
+            statement: `SELECT book.*, cc.cc_behavior as new_cc_behavior, 
+            cc.cc_discrimination as new_cc_discrimination, 
+            cc.cc_health as new_cc_health,
+            cc.cc_language as new_cc_language,
+            cc.cc_magic as new_cc_magic,
+            cc.cc_religion as new_cc_religion,
+            cc.cc_science as new_cc_science,
+            cc.cc_sexuality as new_cc_sexuality,
+            cc.cc_themes as new_cc_themes,
+            cc.cc_violence_weapons as new_cc_violence_weapons,
+            cc.cc_witchcraft as new_cc_witchcraft
+            FROM reshelve_cs.book 
+            left join reshelve_cs.cc on	book.cs_rid = cc.book_id
+            WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
           },
