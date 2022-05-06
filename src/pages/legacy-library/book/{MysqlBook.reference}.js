@@ -180,7 +180,7 @@ function BookDetails(props) {
                   {ccSections}
               </Accordion>
               }
-              { ccSections.length === 0 && <div className="h6">N/A</div>}
+              { ccSections.length === 0 && <div className="h6">Not Provided</div>}
               </Card.Body>
               <BookTags>{tagSections}</BookTags>
           </Card>
