@@ -81,7 +81,7 @@ const Search = (props) => {
   
   const [q, setQ] = useQueryParam('q', StringParam);
 
-  console.log(q)
+  //console.log(q)
 
   /* { ...( q && { searchState: { query: q } } ) } */
   
