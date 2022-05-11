@@ -17,7 +17,7 @@ export default function SearchWidget({ indices }) {
   const rootRef = createRef()
   const [query, setQuery] = useState()
   const [hasFocus, setFocus] = useState(false)
-  console.log(`${process.env.GATSBY_ALGOLIA_APP_ID}`)
+  //console.log(`${process.env.GATSBY_ALGOLIA_APP_ID}`)
   const searchClient = useMemo(
     () =>
       algoliasearch(
