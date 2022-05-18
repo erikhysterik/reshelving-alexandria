@@ -86,9 +86,13 @@ module.exports = {
             cc.cc_sexuality as new_cc_sexuality,
             cc.cc_themes as new_cc_themes,
             cc.cc_violence_weapons as new_cc_violence_weapons,
-            cc.cc_witchcraft as new_cc_witchcraft
+            cc.cc_witchcraft as new_cc_witchcraft/*,
+            author.reference as author_reference, 
+            author.first as author_first, 
+            author.last as author_last*/
             FROM reshelve_cs.book 
             left join reshelve_cs.cc on	book.cs_rid = cc.book_id
+            /*left join author on FIND_IN_SET(author.cs_rid, replace(replace(replace(book.author, '][', ','), '[', ''),']', ''))*/
             WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
