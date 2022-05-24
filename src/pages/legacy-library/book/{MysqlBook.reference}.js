@@ -171,7 +171,7 @@ function BookDetails(props) {
                     publication_date={mysqlBook.publication_date}
                     pages={mysqlBook.pages}
                     description={deEntitize(mysqlBook.description).replace( /(<([^>]+)>)/ig, '').trim().replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&apos;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')}
-                    ccs={ccTypes.length ? ccTypes.map(x => x.cc).reduce((prev, cur) => prev + '\n' + deEntitize(cur)) : ""}
+                    ccs={ccTypes.length ? ccTypes.map(x => x.cc).reduce((prev, cur) => prev + '\n' + deEntitize(cur)).replace( /(<([^>]+)>)/ig, '').trim().replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&apos;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') : ""}
                     tags={mysqlBook.subject ? mysqlBook.subject.split(',').filter(Boolean).map(x => x.trim()) : []}
                     />
                   </Box>
