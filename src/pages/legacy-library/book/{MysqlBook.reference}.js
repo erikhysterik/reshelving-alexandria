@@ -1,7 +1,7 @@
 import * as React from "react"
 import { graphql } from "gatsby"
 import PageWrapper from "../../../components/PageWrapper";
-import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion } from "react-bootstrap";
+import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion, Button } from "react-bootstrap";
 import { Title, Box } from "../../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
@@ -73,6 +73,50 @@ function ContentConsideration(props) {
     )
 }
 
+function SendToNotionButton(props) {
+    const [isLoading, setLoading] = React.useState(false);
+
+    let body = JSON.stringify(
+        {
+            title: props.title,
+            pubdate: props.publication_date,
+            pagecount: props.pages,
+            description: props.description,
+            contentconsiderations: props.ccs,
+            tags: props.tags
+        }
+    )
+    
+    const options = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: body
+      };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      fetch(`${process.env.GATSBY_LAMBDA_SAVE_URL}`, options).then(() => {
+        setLoading(false);
+      });
+    }
+  }, [isLoading]);
+
+  const handleClick = () => setLoading(true);
+
+  return (
+    <Button
+      variant="primary"
+      disabled={isLoading}
+      onClick={!isLoading ? handleClick : null}
+    >
+      {isLoading ? 'Saving...' : 'Send To Notion'}
+    </Button>
+  );
+}
+
 function BookDetails(props) {
   const { mysqlBook } = props.data
   
@@ -86,7 +130,7 @@ function BookDetails(props) {
   ].filter((x) => x.tags)
   .map((v, i) => <><TagSection tagkey={i} tags={v.tags} header={v.section} /></>);
 
-  const ccSections = [
+  const ccTypes = [
       { cc: mysqlBook.disclaimers, header: "General"},
       { cc: (mysqlBook.cc_behavior ?? "") + (mysqlBook.new_cc_behavior ?? ""), header: "Behavior"},
       { cc: (mysqlBook.cc_discrimination ?? "") + (mysqlBook.new_cc_discrimination ?? ""), header: "Discrimination"},
@@ -97,8 +141,8 @@ function BookDetails(props) {
       { cc: (mysqlBook.cc_science ?? "") + (mysqlBook.new_cc_science ?? ""), header: "Science"},
       { cc: (mysqlBook.cc_sexuality ?? "") + (mysqlBook.new_cc_sexuality ?? ""), header: "Sexuality"},
       { cc: (mysqlBook.cc_violence_weapons ?? "") + (mysqlBook.new_cc_violence_weapons ?? ""), header: "Violence"}
-  ].filter((x) => x.cc)
-  .map((v, i) => <><ContentConsideration tagkey={i} cc={v.cc} header={v.header} /></>)
+  ].filter((x) => x.cc);
+  const ccSections = ccTypes.map((v, i) => <><ContentConsideration tagkey={i} cc={v.cc} header={v.header} /></>)
 
   return (
     <>
@@ -122,6 +166,14 @@ function BookDetails(props) {
               <Col lg="11" className="mb-4 mb-lg-5">
               <Box>
                     <Title variant="hero">{deEntitize(mysqlBook.title)}</Title>
+                    <SendToNotionButton 
+                    title={deEntitize(mysqlBook.title)} 
+                    publication_date={mysqlBook.publication_date}
+                    pages={mysqlBook.pages}
+                    description={deEntitize(mysqlBook.description).replace( /(<([^>]+)>)/ig, '').trim().replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&apos;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')}
+                    ccs={ccTypes.length ? ccTypes.map(x => x.cc).reduce((prev, cur) => prev + '\n' + deEntitize(cur)) : ""}
+                    tags={mysqlBook.subject ? mysqlBook.subject.split(',').filter(Boolean).map(x => x.trim()) : []}
+                    />
                   </Box>
               </Col>
             </Row>
