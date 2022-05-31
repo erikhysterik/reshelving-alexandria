@@ -285,6 +285,7 @@ export const query = graphql`
       lead_character
       lead_physical
       lead_vocation
+      location
       tale_name
       new_cc_behavior
       new_cc_discrimination
