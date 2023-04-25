@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import SearchBox from "./search-box"
+import CustomSearchBox from "./custom-search-box"
 
 const open = css`
   width: 10em;

@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components"
-import SearchResult from "./search-result"
+import CustomSearchResult from "./search-result"
 
 const Popover = css`
   max-height: 80vh;
@@ -18,7 +18,7 @@ const Popover = css`
   background: ${({ theme }) => theme.background};
 `
 
-export default styled(SearchResult)`
+export default styled(CustomSearchResult)`
   display: ${props => (props.show ? `block` : `none`)};
   ${Popover}
 

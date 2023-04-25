@@ -3,15 +3,14 @@ import { connectSearchBox } from "react-instantsearch-dom"
 import { Search as SearchIcon } from "@styled-icons/fa-solid"
 import { Form } from "react-bootstrap"
 
-export default connectSearchBox(
-  ({ refine, currentRefinement, className, onFocus }) => {
+const SearchBox = ({ refine, currentRefinement, className, onFocus }) => {
    const inp = useRef(null);
    function iconClick() {
       inp.current.focus();
-   }
+   } 
    return (
     <>
-    <Form className={className}>
+   <Form className={className}>
         <Form.Control 
         type="text"
         className="SearchInput"
@@ -23,8 +22,11 @@ export default connectSearchBox(
         ref={inp}
         />
         <SearchIcon className="SearchIcon" onClick={iconClick} />
-    </Form>
+   </Form>
     </>
   )
-   }
-)
+}
+
+const CustomSearchBox = connectSearchBox(SearchBox)
+
+export default CustomSearchBox;

@@ -1,15 +1,15 @@
-import { Link } from "gatsby"
+//import { Link } from "gatsby"
 import { default as React } from "react"
-import {
+/*import {
   connectStateResults,
   Highlight,
   Hits,
   Index,
   Snippet,
-} from "react-instantsearch-dom"
-const slugify = require('@sindresorhus/slugify')
-
-const HitCount = connectStateResults(({ searchState, searchResults }) => {
+} from "react-instantsearch-dom"*/
+//const slugify = require('@sindresorhus/slugify')
+/*
+const CustomHitCount = ({ searchState, searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits
 
   return hitCount > 0 ? (
@@ -19,32 +19,34 @@ const HitCount = connectStateResults(({ searchState, searchResults }) => {
       </Link>
     </div>
   ) : null
-})
+}
 
-const PageHit = ({ hit }) => (
-  <div>
-    <Link to={"/legacy-library/book/" + slugify(hit.reference)}>
-      <h4>
-        <Highlight attribute="title" hit={hit} tagName="mark" />
-      </h4>
-    </Link>
-    <Snippet attribute="excerpt" hit={hit} tagName="mark" />
-  </div>
-)
-
+const HitCount = connectStateResults(CustomHitCount);
+*/
+//const PageHit = ({ hit }) => (
+//  <div>
+//{/*    <Link to={"/legacy-library/book/" + /*slugify(*//*hit.reference*//*)*//*}>
+//      <h4>
+//        <Highlight attribute="title" hit={hit} tagName="mark" />
+//      </h4>
+//    </Link>
+//    <Snippet attribute="excerpt" hit={hit} tagName="mark" /> */}
+//  </div>
+//)
+/*
 const HitsInIndex = ({ index }) => (
   <Index indexName={index.name}>
-    <HitCount />
+   {/* <HitCount /> *//*}
     <Hits className="Hits" hitComponent={PageHit} />
   </Index>
 )
-
-const SearchResult = ({ indices, className }) => (
+*/
+const CustomSearchResult = ({ indices, className }) => (
   <div className={className}>
-    {indices.map(index => (
+   {/* {indices.map(index => (
       <HitsInIndex index={index} key={index.name} />
-    ))}
+   ))} */}
   </div>
 )
 
-export default SearchResult
+export default CustomSearchResult;
