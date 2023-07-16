@@ -188,7 +188,7 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
-                      Author
+                      Author:
                   </Card.Subtitle>
                   <div> 
                   <Link to={"/legacy-library/author/" + slugify(mysqlBook.author_reference)}>{deEntitize(mysqlBook.author_first) + " " + deEntitize(mysqlBook.author_last)}</Link>
@@ -196,7 +196,7 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
-                      Illustrator
+                      Illustrator:
                   </Card.Subtitle>
                   <div>
                   <Link to={"/"}>{mysqlBook.illustrator}</Link>
@@ -204,17 +204,21 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
-                      Publisher
+                      Publisher:
                   </Card.Subtitle>
                   <Card.Text>{mysqlBook.publisher}</Card.Text>
                   <Card.Subtitle>
-                      Date
+                      Date:
                   </Card.Subtitle>
                   <Card.Text>{mysqlBook.publication_date}</Card.Text>
                   <Card.Subtitle>
-                      Pages
+                      Pages:
                   </Card.Subtitle>
                   <Card.Text>{mysqlBook.pages}</Card.Text>
+                  <Card.Subtitle>
+                      Series:
+                  </Card.Subtitle>
+                  <Card.Text>{mysqlBook.series_name}</Card.Text>
               </Card.Body>
           </Card>
       </Col>
@@ -302,6 +306,7 @@ export const query = graphql`
       author_reference
       author_first
       author_last
+      series_name
     }
   }
 `
