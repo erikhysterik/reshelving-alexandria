@@ -190,8 +190,8 @@ function BookDetails(props) {
                   <Card.Subtitle>
                       Author
                   </Card.Subtitle>
-                  <div>
-                  <Link to={"/"}>{mysqlBook.author}</Link>
+                  <div> 
+                  <Link to={"/legacy-library/author/" + slugify(mysqlBook.author_reference)}>{deEntitize(mysqlBook.author_first) + " " + deEntitize(mysqlBook.author_last)}</Link>
                   </div>
               </Card.Body>
               <Card.Body>
@@ -299,6 +299,9 @@ export const query = graphql`
       new_cc_violence_weapons
       new_cc_witchcraft
       pages
+      author_reference
+      author_first
+      author_last
     }
   }
 `
