@@ -76,6 +76,31 @@ module.exports = {
         },
         queries: [
           {
+            // need post processing for dupes due to multi author books!!!
+            statement: `SELECT tempy.*, author.first as author_first, author.last as author_last, author.reference as author_reference FROM
+            (SELECT book.*, cc.cc_behavior as new_cc_behavior, 
+                        cc.cc_discrimination as new_cc_discrimination, 
+                        cc.cc_health as new_cc_health,
+                        cc.cc_language as new_cc_language,
+                        cc.cc_magic as new_cc_magic,
+                        cc.cc_religion as new_cc_religion,
+                        cc.cc_science as new_cc_science,
+                        cc.cc_sexuality as new_cc_sexuality,
+                        cc.cc_themes as new_cc_themes,
+                        cc.cc_violence_weapons as new_cc_violence_weapons,
+                        cc.cc_witchcraft as new_cc_witchcraft,
+                        author_book_l.book_id as author_book_id,
+                        author_book_l.author_id as author_author_id
+                        FROM reshelve_cs.book 
+                        left join reshelve_cs.cc on	book.cs_rid = cc.book_id
+                        left join reshelve_cs.author_book_l on author_book_l.book_id = book.cs_rid
+                        WHERE status <> 'draft' and status <> 'hold' and cs_type = 'basic' ORDER BY sort_title ASC) as tempy
+            left join reshelve_cs.author 
+            on tempy.author_author_id = author.cs_rid;`,
+            idFieldName: 'cs_rid',
+            name: 'book'
+          },
+          /*{
             statement: `SELECT book.*, cc.cc_behavior as new_cc_behavior, 
             cc.cc_discrimination as new_cc_discrimination, 
             cc.cc_health as new_cc_health,
@@ -86,21 +111,38 @@ module.exports = {
             cc.cc_sexuality as new_cc_sexuality,
             cc.cc_themes as new_cc_themes,
             cc.cc_violence_weapons as new_cc_violence_weapons,
-            cc.cc_witchcraft as new_cc_witchcraft/*,
-            author.reference as author_reference, 
-            author.first as author_first, 
-            author.last as author_last*/
+            cc.cc_witchcraft as new_cc_witchcraft
             FROM reshelve_cs.book 
             left join reshelve_cs.cc on	book.cs_rid = cc.book_id
-            /*left join author on FIND_IN_SET(author.cs_rid, replace(replace(replace(book.author, '][', ','), '[', ''),']', ''))*/
             WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
-            name: 'book'
-          },
+            name: 'booktoo'
+
+          },*/
           {
-            statement: "SELECT * FROM alltags group by tag",
+            statement: "SELECT * FROM alltags group by tag;",
             idFieldName: 'id',
             name: 'tag'
+          },
+          {
+            // need post processing for dupes due to multi relationship authors!!!
+            /*statement: `SELECT tempy.*, author.reference as author_relationship_reference from
+            (SELECT author.*, author_author_l.author2_id as rel_author2_id, author_author_l.relationship as author_relationship 
+            FROM reshelve_cs.author
+            left join author_author_l on author_author_l.author_id = author.cs_rid) as tempy
+            left join author on tempy.rel_author2_id = author.cs_rid;`,*/
+            // need to cast birthdate to char type, date type gets mangled??
+            statement: `select cs_rid, first, last, type, dates, bio, reference, quote, nationality, featured, notes, additional, gender, diversity, pronunciation, source_notes, top_author, living_author, complete, additional_information, website, relationship, additional_illustrated, alternate_name, hidden_alternate, CAST(birthdate as char) as fixedbirthdate from author;`,
+            idFieldName: 'cs_rid',
+            name: 'author'
+          },
+          {
+            statement: `select cs_rid, author_id, author2_id, relationship from author_author_l;`,
+            idFieldName: 'cs_rid',
+            name: 'authorrelationships',
+            parentName: 'author',
+            foreignKey: 'author_id',
+            cardinality: 'OneToMany'
           }
         ]
       }
