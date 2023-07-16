@@ -78,7 +78,7 @@ module.exports = {
           {
             // need post processing for dupes due to multi author books!!!
             statement: `SELECT tempy.*, author.first as author_first, author.last as author_last, author.reference as author_reference FROM
-            (SELECT book.*, cc.cc_behavior as new_cc_behavior, 
+            (SELECT book.*, series.name as series_name, cc.cc_behavior as new_cc_behavior, 
                         cc.cc_discrimination as new_cc_discrimination, 
                         cc.cc_health as new_cc_health,
                         cc.cc_language as new_cc_language,
@@ -94,7 +94,8 @@ module.exports = {
                         FROM reshelve_cs.book 
                         left join reshelve_cs.cc on	book.cs_rid = cc.book_id
                         left join reshelve_cs.author_book_l on author_book_l.book_id = book.cs_rid
-                        WHERE status <> 'draft' and status <> 'hold' and cs_type = 'basic' ORDER BY sort_title ASC) as tempy
+                        left join reshelve_cs.series on series.cs_rid = book.series
+                        WHERE book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic' ORDER BY sort_title ASC) as tempy
             left join reshelve_cs.author 
             on tempy.author_author_id = author.cs_rid;`,
             idFieldName: 'cs_rid',
@@ -132,12 +133,12 @@ module.exports = {
             left join author_author_l on author_author_l.author_id = author.cs_rid) as tempy
             left join author on tempy.rel_author2_id = author.cs_rid;`,*/
             // need to cast birthdate to char type, date type gets mangled??
-            statement: `select cs_rid, first, last, type, dates, bio, reference, quote, nationality, featured, notes, additional, gender, diversity, pronunciation, source_notes, top_author, living_author, complete, additional_information, website, relationship, additional_illustrated, alternate_name, hidden_alternate, CAST(birthdate as char) as fixedbirthdate from author;`,
+            statement: `select cs_rid, first, last, type, dates, bio, reference, quote, nationality, featured, notes, additional, gender, diversity, pronunciation, source_notes, top_author, living_author, complete, additional_information, website, relationship, additional_illustrated, alternate_name, hidden_alternate, CAST(birthdate as char) as fixedbirthdate from author order by last ASC;`,
             idFieldName: 'cs_rid',
             name: 'author'
           },
           {
-            statement: `select cs_rid, author_id, author2_id, relationship from author_author_l;`,
+            statement: `select cs_rid, author_id, author2_id, cs_type, relationship from author_author_l;`,
             idFieldName: 'cs_rid',
             name: 'authorrelationships',
             parentName: 'author',

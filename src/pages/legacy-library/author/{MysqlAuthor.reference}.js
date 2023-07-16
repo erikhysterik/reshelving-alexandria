@@ -32,7 +32,8 @@ const BoxStyled = styled(Box)`
 function AuthorDetails(props) {
   const { authordetails, authorreldetails } = props.data
   
-  const authorRelationships = authordetails.authorrelationships.map((x) => {
+  // todo - canonical. what is they? just pseudonyms? how does the data relationship go, 1 way?
+  const authorRelationships = authordetails.authorrelationships.filter((s) => s.cs_type === 'relationship').map((x) => {
     // relationship in author rel record is relative to self "wife of"
     // get the relationship for display from the relative's record
     let d = authorreldetails.edges.find((y) => y.node.cs_rid === x.author2_id);
@@ -41,7 +42,7 @@ function AuthorDetails(props) {
     return {
         // capitalize the Relationship entry
         relationship: r.relationship && r.relationship.length ? 
-           r.relationship.replace(/^./, r.relationship[0].toUpperCase()) : "",
+           r.relationship.trim().replace(/^./, r.relationship[0].toUpperCase()) : "",
         first: d.node.first,
         last: d.node.last,
         reference: d.node.reference
@@ -91,21 +92,21 @@ function AuthorDetails(props) {
               { authordetails.type &&
               <Card.Body>
                   <Card.Subtitle>
-                      Type
+                      Type:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.type.replace(/^./, authordetails.type[0].toUpperCase())}</Card.Text>
               </Card.Body>}
               { authordetails.pronunciation &&
               <Card.Body>
                   <Card.Subtitle>
-                      Pronunciation
+                      Pronunciation:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.pronunciation}</Card.Text>
               </Card.Body>}
               { altNames.length > 0 &&
               <Card.Body>
                   <Card.Subtitle>
-                      Alternate Name{ altNames.length > 1 && "s"}
+                      Alternate Name{ altNames.length > 1 && "s"}:
                   </Card.Subtitle>
                   <Card.Text>
                   { altNames.length > 0 && altNames.map((x) => (
@@ -115,47 +116,47 @@ function AuthorDetails(props) {
               { authordetails.fixedbirthdate !== '0000-00-00' && authordetails.fixedbirthdate &&
               <Card.Body>
                   <Card.Subtitle>
-                      Birth Date
+                      Birth Date:
                   </Card.Subtitle>
                   <Card.Text>{new Date(authordetails.fixedbirthdate).toLocaleDateString('en-US', {month: 'long', day: 'numeric'})}</Card.Text>
               </Card.Body>}
               { authordetails.gender &&
               <Card.Body>
                   <Card.Subtitle>
-                      Gender
+                      Gender:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.gender.replace(/^./, authordetails.gender[0].toUpperCase())}</Card.Text>
               </Card.Body>}
               { authordetails.nationality &&
               <Card.Body>
                   <Card.Subtitle>
-                      Nationality
+                      Nationality:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.nationality}</Card.Text>
               </Card.Body>}
               { authordetails.diversity &&
               <Card.Body>
                   <Card.Subtitle>
-                      Diverse Author
+                      Diverse Author:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.diversity.replace(/^./, authordetails.diversity[0].toUpperCase())}</Card.Text>
               </Card.Body>}
               <Card.Body>
                   <Card.Subtitle>
-                      Complete Works Catalogued
+                      Complete Works Catalogued:
                   </Card.Subtitle>
                   <Card.Text>{authordetails.complete ? "Yes" : "No"}</Card.Text>
               </Card.Body>
               { authordetails.website &&
               <Card.Body>
                   <Card.Subtitle>
-                      Website
+                      Website:
                   </Card.Subtitle>
                   <div><a href={authordetails.website}>{authordetails.website}</a></div>
               </Card.Body>}
               {authorRelationships.length > 0 &&
               <Card.Body>
-              <Card.Subtitle>Related Authors</Card.Subtitle>
+              <Card.Subtitle>Related Authors:</Card.Subtitle>
               </Card.Body> }
               {authorRelationships.length > 0 && authorRelationships.map((rel) => (
                   <Card.Body>
@@ -166,29 +167,6 @@ function AuthorDetails(props) {
                   </Card.Body>
               ) )
               }
-              
-              {/*<Card.Body>
-                  <Card.Subtitle>
-                      Illustrator
-                  </Card.Subtitle>
-                  <div>
-                  <Link to={"/"}>{mysqlBook.illustrator}</Link>
-                  </div>
-              </Card.Body>
-              <Card.Body>
-                  <Card.Subtitle>
-                      Publisher
-                  </Card.Subtitle>
-                  <Card.Text>{mysqlBook.publisher}</Card.Text>
-                  <Card.Subtitle>
-                      Date
-                  </Card.Subtitle>
-                  <Card.Text>{mysqlBook.publication_date}</Card.Text>
-                  <Card.Subtitle>
-                      Pages
-                  </Card.Subtitle>
-                  <Card.Text>{mysqlBook.pages}</Card.Text>
-  </Card.Body>*/}
           </Card>
       </Col>
       <Col md={8} xl={9}>
