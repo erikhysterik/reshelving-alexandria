@@ -138,13 +138,24 @@ module.exports = {
             name: 'author'
           },
           {
-            statement: `select cs_rid, author_id, author2_id, cs_type, relationship from author_author_l;`,
+            //statement: `select cs_rid, author_id, author2_id, cs_type, relationship from author_author_l;`,
+            statement: `select a.cs_rid, a.cs_type, a.author_id, a.author2_id, a.relationship as a_relationship, 
+            b.relationship as b_relationship, c.first, c.last, c.reference
+            from author_author_l a
+            left join author_author_l b
+            on a.author2_id = b.author_id and a.author_id = b.author2_id
+            left join author c
+            on a.author2_id = c.cs_rid
+            where a.author_id <> 0 and a.cs_type <> 'canonical';`,
             idFieldName: 'cs_rid',
             name: 'authorrelationships',
             parentName: 'author',
             foreignKey: 'author_id',
             cardinality: 'OneToMany'
           }
+          /// need query for canonical rels for an author as well, i don't think they'll mix right with relationships
+          /// for instance this entry authorid 1847, author2id 115; authorid 1847 author2id 386
+          /// 1847 is douglas coe who's a pseudonym for both the author2's.... so canonical means authorid is pseudonym used by authord2id
         ]
       }
     },
