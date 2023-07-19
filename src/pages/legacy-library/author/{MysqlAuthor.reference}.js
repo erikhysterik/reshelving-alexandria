@@ -30,22 +30,23 @@ const BoxStyled = styled(Box)`
 `;
 
 function AuthorDetails(props) {
-  const { authordetails, authorreldetails } = props.data
+  const { authordetails } = props.data
   
   // todo - canonical. what is they? just pseudonyms? how does the data relationship go, 1 way?
-  const authorRelationships = authordetails.authorrelationships.filter((s) => s.cs_type === 'relationship').map((x) => {
-    // relationship in author rel record is relative to self "wife of"
-    // get the relationship for display from the relative's record
-    let d = authorreldetails.edges.find((y) => y.node.cs_rid === x.author2_id);
-    let r = d.node.authorrelationships.find((z) => authordetails.cs_rid === z.author2_id);
+  const authorRelationships = authordetails.authorrelationships.map((x) => {
+    // take the relationship name from the secondary source, and if not there use author's relationship
+    // entry and add " of" ... so find "Husband" from other person's info, or specify "Wife of"
+    let rel = x.b_relationship ? 
+      x.b_relationship.trim().replace(/^./, x.b_relationship[0].toUpperCase()) : 
+        x.a_relationship ? 
+          x.b_relationship.trim().replace(/^./, x.b_relationship[0].toUpperCase()) + " of" : "";
 
     return {
         // capitalize the Relationship entry
-        relationship: r.relationship && r.relationship.length ? 
-           r.relationship.trim().replace(/^./, r.relationship[0].toUpperCase()) : "",
-        first: d.node.first,
-        last: d.node.last,
-        reference: d.node.reference
+        relationship: rel,
+        first: x.first,
+        last: x.last,
+        reference: x.reference
     }
   })
 
@@ -154,19 +155,22 @@ function AuthorDetails(props) {
                   </Card.Subtitle>
                   <div><a href={authordetails.website}>{authordetails.website}</a></div>
               </Card.Body>}
-              {authorRelationships.length > 0 &&
+              { authorRelationships.length > 0 &&
               <Card.Body>
-              <Card.Subtitle>Related Authors:</Card.Subtitle>
-              </Card.Body> }
+              <Card.Subtitle>Related Authors:</Card.Subtitle> 
               {authorRelationships.length > 0 && authorRelationships.map((rel) => (
-                  <Card.Body>
-                  <Card.Subtitle>{rel.relationship}</Card.Subtitle>
+                  
+                  <>
+                  <Card.Text style={{marginBottom: 0}}>{rel.relationship}</Card.Text>
                   <div> 
                   <Link to={"/legacy-library/author/" + slugify(rel.reference)}>{deEntitize(rel.first) + " " + deEntitize(rel.last)}</Link>
                   </div>
-                  </Card.Body>
+                  </>
+                  
               ) )
               }
+              </Card.Body> }
+              
           </Card>
       </Col>
       <Col md={8} xl={9}>
@@ -230,22 +234,12 @@ export const query = graphql`
       bio
       authorrelationships {
         author2_id
-        relationship
+        a_relationship
+        b_relationship
+        first
+        last
+        reference
       }
-    }
-    authorreldetails: allMysqlAuthor {
-        edges {
-            node {
-              reference
-              last
-              first
-              cs_rid
-              authorrelationships {
-                author2_id
-                relationship
-              }
-            }
-        }
     }
   }
 `
