@@ -39,7 +39,7 @@ function AuthorDetails(props) {
     let rel = x.b_relationship ? 
       x.b_relationship.trim().replace(/^./, x.b_relationship[0].toUpperCase()) : 
         x.a_relationship ? 
-          x.b_relationship.trim().replace(/^./, x.b_relationship[0].toUpperCase()) + " of" : "";
+          x.a_relationship.trim().replace(/^./, x.a_relationship[0].toUpperCase()) + " of" : "";
 
     return {
         // capitalize the Relationship entry
