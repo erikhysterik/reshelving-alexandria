@@ -32,7 +32,6 @@ const BoxStyled = styled(Box)`
 function AuthorDetails(props) {
   const { authordetails } = props.data
   
-  // todo - canonical. what is they? just pseudonyms? how does the data relationship go, 1 way?
   const authorRelationships = authordetails.authorrelationships.map((x) => {
     // take the relationship name from the secondary source, and if not there use author's relationship
     // entry and add " of" ... so find "Husband" from other person's info, or specify "Wife of"
@@ -159,14 +158,32 @@ function AuthorDetails(props) {
               <Card.Body>
               <Card.Subtitle>Related Authors:</Card.Subtitle> 
               {authorRelationships.length > 0 && authorRelationships.map((rel) => (
-                  
                   <>
                   <Card.Text style={{marginBottom: 0}}>{rel.relationship}</Card.Text>
                   <div> 
                   <Link to={"/legacy-library/author/" + slugify(rel.reference)}>{deEntitize(rel.first) + " " + deEntitize(rel.last)}</Link>
                   </div>
                   </>
-                  
+              ) )
+              }
+              </Card.Body> }
+              { authordetails.authorpseudonyms?.length > 0 &&
+              <Card.Body>
+              <Card.Subtitle>Pseudonym{authordetails.authorpseudonyms.length > 1 && "s"}:</Card.Subtitle> 
+              {authordetails.authorpseudonyms?.length > 0 && authordetails.authorpseudonyms.map((pse) => (
+                  <div> 
+                  <Link to={"/legacy-library/author/" + slugify(pse.reference)}>{deEntitize(pse.first) + " " + deEntitize(pse.last)}</Link>
+                  </div>
+              ) )
+              }
+              </Card.Body> }
+              { authordetails.authorpseudonymofs?.length > 0 &&
+              <Card.Body>
+              <Card.Subtitle>Pseudonym Of:</Card.Subtitle> 
+              {authordetails.authorpseudonymofs?.length > 0 && authordetails.authorpseudonymofs.map((pse) => (
+                  <div> 
+                  <Link to={"/legacy-library/author/" + slugify(pse.reference)}>{deEntitize(pse.first) + " " + deEntitize(pse.last)}</Link>
+                  </div>
               ) )
               }
               </Card.Body> }
@@ -236,6 +253,16 @@ export const query = graphql`
         author2_id
         a_relationship
         b_relationship
+        first
+        last
+        reference
+      }
+      authorpseudonyms {
+        first
+        last
+        reference
+      }
+      authorpseudonymofs {
         first
         last
         reference

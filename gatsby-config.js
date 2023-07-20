@@ -95,9 +95,10 @@ module.exports = {
                         left join reshelve_cs.cc on	book.cs_rid = cc.book_id
                         left join reshelve_cs.author_book_l on author_book_l.book_id = book.cs_rid
                         left join reshelve_cs.series on series.cs_rid = book.series
-                        WHERE book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic' ORDER BY sort_title ASC) as tempy
+                        WHERE book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic') as tempy
             left join reshelve_cs.author 
-            on tempy.author_author_id = author.cs_rid;`,
+            on tempy.author_author_id = author.cs_rid
+            ORDER BY tempy.sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
           },
@@ -138,7 +139,6 @@ module.exports = {
             name: 'author'
           },
           {
-            //statement: `select cs_rid, author_id, author2_id, cs_type, relationship from author_author_l;`,
             statement: `select a.cs_rid, a.cs_type, a.author_id, a.author2_id, a.relationship as a_relationship, 
             b.relationship as b_relationship, c.first, c.last, c.reference
             from author_author_l a
@@ -152,10 +152,33 @@ module.exports = {
             parentName: 'author',
             foreignKey: 'author_id',
             cardinality: 'OneToMany'
-          }
-          /// need query for canonical rels for an author as well, i don't think they'll mix right with relationships
-          /// for instance this entry authorid 1847, author2id 115; authorid 1847 author2id 386
+          },
+          /// pseudonym rels are interesting. for instance this entry authorid 1847, author2id 115; authorid 1847 author2id 386
           /// 1847 is douglas coe who's a pseudonym for both the author2's.... so canonical means authorid is pseudonym used by authord2id
+          {
+            statement: `select ar.cs_rid, ar.author_id, ar.author2_id, a.first, a.last, a.reference 
+            from author_author_l ar
+            left join author a
+            on author2_id = a.cs_rid
+            where cs_type = 'canonical';`,
+            idFieldName: 'cs_rid',
+            name: 'authorpseudonymofs',
+            parentName: 'author',
+            foreignKey: 'author_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select ar.cs_rid, ar.author_id, ar.author2_id, a.first, a.last, a.reference 
+            from author_author_l ar
+            left join author a
+            on author_id = a.cs_rid
+            where cs_type = 'canonical';`,
+            idFieldName: 'cs_rid',
+            name: 'authorpseudonyms',
+            parentName: 'author',
+            foreignKey: 'author2_id',
+            cardinality: 'OneToMany'
+          }
         ]
       }
     },
