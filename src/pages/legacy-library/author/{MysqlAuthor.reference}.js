@@ -1,7 +1,7 @@
 import * as React from "react"
-import { graphql } from "gatsby"
+import { graphql, navigate } from "gatsby"
 import PageWrapper from "../../../components/PageWrapper";
-import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion, Button } from "react-bootstrap";
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Table } from "react-bootstrap";
 import { Title, Box } from "../../../components/Core";
 import styled from "styled-components";
 import { Link } from 'gatsby'
@@ -48,6 +48,32 @@ function AuthorDetails(props) {
         reference: x.reference
     }
   })
+
+  // combine entries as "Author & Illustrator" for role if applicable, else build the combined array
+  let authorBooks = [], illustratorBooks = JSON.parse(JSON.stringify(authordetails.illustratorbooks));
+  for (let i = 0; i < authordetails.authorbooks.length; i++) {
+    let andIllustrator = false;
+    // if same book is in author and illustrator, display as one but change role
+    let a = illustratorBooks.findIndex(el => el.book_id === authordetails.authorbooks[i].book_id) 
+    if (a !== -1) {
+       andIllustrator = true;
+       illustratorBooks.splice(a, 1);
+    }
+    authorBooks.push({
+        reference: authordetails.authorbooks[i].reference,
+        title: authordetails.authorbooks[i].title,
+        publication_date: authordetails.authorbooks[i].publication_date,
+        role: andIllustrator ? "Author & Illustrator" : "Author"
+    })
+  }
+  for (let j = 0; j < illustratorBooks.length; j++) {
+    authorBooks.push({
+        reference: illustratorBooks[j].reference,
+        title: illustratorBooks[j].title,
+        publication_date: illustratorBooks[j].publication_date,
+        role: "Illustrator"
+    })
+  }
 
   // split and array concat the 2 alt name fields that are using inconsistent delims
   const altNames = (authordetails.alternate_name?.split(/\;|\,/).map((x) => x.trim()).filter((y) => y !== '') ?? []).concat(
@@ -217,6 +243,31 @@ function AuthorDetails(props) {
           </Card>
       </Col>
   </Row>
+  <Row className="justify-content-center">
+              <Col lg="12" className="mb-4 mb-lg-5">
+                <Card>
+                    <Card.Title>Books</Card.Title>
+                    <Table striped bordered hover size="sm" variant="dark">
+          <thead>
+              <tr>
+                  <th>Title</th>
+                  <th>Role</th>
+                  <th>Published</th>
+              </tr>
+          </thead>
+          <tbody>
+        {authorBooks.map((item, ind) => {
+          return <tr style={{cursor: "pointer"}} key={item.title + ind} onClick={() => navigate('/legacy-library/book/' + slugify(item.reference))} >
+              <td>{deEntitize(item.title)}</td>
+              <td>{item.role}</td>
+              <td>{item.publication_date}</td>
+              </tr>;
+        })}
+        </tbody>
+      </Table>
+                </Card>
+              </Col>
+            </Row>
       </Container>
       </BoxStyled>
       </PageWrapper>
@@ -266,6 +317,18 @@ export const query = graphql`
         first
         last
         reference
+      }
+      authorbooks {
+        reference
+        publication_date
+        title
+        book_id
+      }
+      illustratorbooks {
+        reference
+        publication_date
+        title
+        book_id
       }
     }
   }

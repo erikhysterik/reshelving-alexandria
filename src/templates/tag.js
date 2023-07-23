@@ -128,7 +128,7 @@ function Tag(props) {
         {tagList.map((item, ind) => {
           return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/legacy-library/book/' + slugify(item.node.reference))} >
               <td>{deEntitize(item.node.title)}</td>
-              <td>Coming Soon</td>
+              <td>{deEntitize(item.node.bookauthors.at(0)?.first ?? "") + " " + deEntitize(item.node.bookauthors.at(0)?.last ?? "")}</td>
               </tr>;
         })}
         </tbody>
@@ -154,6 +154,10 @@ query MyTagQuery ($regextag: String!) {
             id
             title
             reference
+            bookauthors {
+              first
+              last
+            }
         }
       }
     }
@@ -164,6 +168,10 @@ query MyTagQuery ($regextag: String!) {
              id
              title
              reference
+             bookauthors {
+              first
+              last
+            }
          }
        }
     }
@@ -174,6 +182,10 @@ query MyTagQuery ($regextag: String!) {
              id
              title
              reference
+             bookauthors {
+              first
+              last
+            }
          }
        }
     }
@@ -184,6 +196,10 @@ query MyTagQuery ($regextag: String!) {
              id
              title
              reference
+             bookauthors {
+              first
+              last
+            }
          }
        }
     }
@@ -194,6 +210,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -204,6 +224,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -214,6 +238,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -224,6 +252,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -234,6 +266,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -244,6 +280,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -254,6 +294,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -264,6 +308,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -274,6 +322,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }
@@ -284,6 +336,10 @@ query MyTagQuery ($regextag: String!) {
            id
            title
            reference
+           bookauthors {
+            first
+            last
+          }
        }
      }
     }

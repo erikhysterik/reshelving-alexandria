@@ -15,7 +15,10 @@ const myQuery = `
         secondary_name
         url
         reference
-        author
+        bookauthors {
+          first
+          last
+        }
         cc_behavior
         cc_discrimination
         cc_health
@@ -25,7 +28,10 @@ const myQuery = `
         cc_science
         cc_sexuality
         cc_violence_weapons
-        illustrator
+        bookillustrators {
+          first
+          last
+        }
         tags
         publisher
         publication_date
@@ -76,63 +82,79 @@ module.exports = {
         },
         queries: [
           {
-            // need post processing for dupes due to multi author books!!!
-            statement: `SELECT tempy.*, author.first as author_first, author.last as author_last, author.reference as author_reference FROM
-            (SELECT book.*, series.name as series_name, cc.cc_behavior as new_cc_behavior, 
-                        cc.cc_discrimination as new_cc_discrimination, 
-                        cc.cc_health as new_cc_health,
-                        cc.cc_language as new_cc_language,
-                        cc.cc_magic as new_cc_magic,
-                        cc.cc_religion as new_cc_religion,
-                        cc.cc_science as new_cc_science,
-                        cc.cc_sexuality as new_cc_sexuality,
-                        cc.cc_themes as new_cc_themes,
-                        cc.cc_violence_weapons as new_cc_violence_weapons,
-                        cc.cc_witchcraft as new_cc_witchcraft,
-                        author_book_l.book_id as author_book_id,
-                        author_book_l.author_id as author_author_id
-                        FROM reshelve_cs.book 
-                        left join reshelve_cs.cc on	book.cs_rid = cc.book_id
-                        left join reshelve_cs.author_book_l on author_book_l.book_id = book.cs_rid
-                        left join reshelve_cs.series on series.cs_rid = book.series
-                        WHERE book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic') as tempy
-            left join reshelve_cs.author 
-            on tempy.author_author_id = author.cs_rid
-            ORDER BY tempy.sort_title ASC;`,
+            statement: `SELECT book.cs_rid, book.title, book.description, book.reference, book.sort_title, book.secondary_name,
+            book.url, book.cc_behavior, book.cc_discrimination, book.cc_health, book.cc_language, book.pages,
+            book.cc_magic, book.cc_religion, book.cc_science, book.cc_sexuality, book.cc_violence_weapons, online_link, book.tags,
+            book.publisher, book.publication_date, book.disclaimers, book.secondary_tags, book.illustration_tags,
+            book.subject, book.lead_name, book.lead_gender, book.lead_race_ethnicity_nationality, book.lead_age, book.lead_religion,
+            book.lead_character, book.lead_physical, book.lead_vocation, book.location, book.tale_name,
+            series.name as series_name, cc.cc_behavior as new_cc_behavior, cc.cc_discrimination as new_cc_discrimination, 
+            cc.cc_health as new_cc_health, cc.cc_language as new_cc_language, cc.cc_magic as new_cc_magic,
+            cc.cc_religion as new_cc_religion, cc.cc_science as new_cc_science, cc.cc_sexuality as new_cc_sexuality,
+            cc.cc_themes as new_cc_themes, cc.cc_violence_weapons as new_cc_violence_weapons, cc.cc_witchcraft as new_cc_witchcraft,
+            publisher.name as publisher_name
+            FROM reshelve_cs.book 
+            left join reshelve_cs.cc on	book.cs_rid = cc.book_id
+            left join reshelve_cs.series on series.cs_rid = book.series
+            left join reshelve_cs.publisher on publisher.cs_rid = book.publisher
+            WHERE book.status <> 'draft' and book.status <> 'hold' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
           },
-          /*{
-            statement: `SELECT book.*, cc.cc_behavior as new_cc_behavior, 
-            cc.cc_discrimination as new_cc_discrimination, 
-            cc.cc_health as new_cc_health,
-            cc.cc_language as new_cc_language,
-            cc.cc_magic as new_cc_magic,
-            cc.cc_religion as new_cc_religion,
-            cc.cc_science as new_cc_science,
-            cc.cc_sexuality as new_cc_sexuality,
-            cc.cc_themes as new_cc_themes,
-            cc.cc_violence_weapons as new_cc_violence_weapons,
-            cc.cc_witchcraft as new_cc_witchcraft
-            FROM reshelve_cs.book 
-            left join reshelve_cs.cc on	book.cs_rid = cc.book_id
-            WHERE status <> 'draft' and status <> 'hold' ORDER BY sort_title ASC;`,
+          {
+            statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, a.first, a.last, a.reference 
+            FROM reshelve_cs.author_book_l
+            inner join author a
+            on author_book_l.author_id = a.cs_rid
+            where author_book_l.cs_type = 'basic';`,
             idFieldName: 'cs_rid',
-            name: 'booktoo'
-
-          },*/
+            name: 'bookauthors',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, a.first, a.last, a.reference 
+            FROM reshelve_cs.author_book_l
+            inner join author a
+            on author_book_l.author_id = a.cs_rid
+            where author_book_l.cs_type = 'illustrator';`,
+            idFieldName: 'cs_rid',
+            name: 'bookillustrators',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, b.title, b.reference, b.publication_date 
+            FROM reshelve_cs.author_book_l
+            inner join book b
+            on author_book_l.book_id = b.cs_rid
+            where author_book_l.cs_type = 'basic' and b.status <> 'draft' and b.status <> 'hold';`,
+            idFieldName: 'cs_rid',
+            name: 'authorbooks',
+            parentName: 'author',
+            foreignKey: 'author_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, b.title, b.reference, b.publication_date 
+            FROM reshelve_cs.author_book_l
+            inner join book b
+            on author_book_l.book_id = b.cs_rid
+            where author_book_l.cs_type = 'illustrator' and b.status <> 'draft' and b.status <> 'hold';`,
+            idFieldName: 'cs_rid',
+            name: 'illustratorbooks',
+            parentName: 'author',
+            foreignKey: 'author_id',
+            cardinality: 'OneToMany'
+          },
           {
             statement: "SELECT * FROM alltags group by tag;",
             idFieldName: 'id',
             name: 'tag'
           },
           {
-            // need post processing for dupes due to multi relationship authors!!!
-            /*statement: `SELECT tempy.*, author.reference as author_relationship_reference from
-            (SELECT author.*, author_author_l.author2_id as rel_author2_id, author_author_l.relationship as author_relationship 
-            FROM reshelve_cs.author
-            left join author_author_l on author_author_l.author_id = author.cs_rid) as tempy
-            left join author on tempy.rel_author2_id = author.cs_rid;`,*/
             // need to cast birthdate to char type, date type gets mangled??
             statement: `select cs_rid, first, last, type, dates, bio, reference, quote, nationality, featured, notes, additional, gender, diversity, pronunciation, source_notes, top_author, living_author, complete, additional_information, website, relationship, additional_illustrated, alternate_name, hidden_alternate, CAST(birthdate as char) as fixedbirthdate from author order by last ASC;`,
             idFieldName: 'cs_rid',

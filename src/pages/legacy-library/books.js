@@ -93,7 +93,7 @@ function Books(props) {
         {tagList.map((item, ind) => {
           return <tr style={{cursor: "pointer"}} key={item.node.id + ind} onClick={() => navigate('/legacy-library/book/' + slugify(item.node.reference))} >
               <td>{deEntitize(item.node.title)}</td>
-              <td>{deEntitize(item.node.author_first) + " " + deEntitize(item.node.author_last)}</td>
+              <td>{deEntitize(item.node.bookauthors.at(0)?.first ?? "") + " " + deEntitize(item.node.bookauthors.at(0)?.last ?? "")}</td>
               <td>{item.node.publication_date}</td>
               </tr>;
         })}
@@ -120,8 +120,10 @@ export const query = graphql`
                 title
                 publication_date
                 reference
-                author_first
-                author_last
+                bookauthors {
+                  first
+                  last
+                }
             }
         }
     }
