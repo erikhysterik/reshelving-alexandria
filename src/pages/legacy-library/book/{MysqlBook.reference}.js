@@ -126,7 +126,8 @@ function BookDetails(props) {
       { tags: mysqlBook.secondary_tags, section: "Secondary" },
       { tags: mysqlBook.illustration_tags, section: "Illustration" },
       { tags: mysqlBook.location, section: "Location" },
-      { tags: [mysqlBook.lead_name,mysqlBook.lead_gender,mysqlBook.lead_race_ethnicity_nationality,mysqlBook.lead_age,mysqlBook.lead_religion,mysqlBook.lead_character,mysqlBook.lead_physical,mysqlBook.lead_vocation,mysqlBook.tale_name].filter(Boolean).join(","), section: "Lead Character"}
+      { tags: mysqlBook.tale_name, section: "Tale Name" },
+      { tags: [mysqlBook.lead_name,mysqlBook.lead_gender,mysqlBook.lead_race_ethnicity_nationality,mysqlBook.lead_age,mysqlBook.lead_religion,mysqlBook.lead_character,mysqlBook.lead_physical,mysqlBook.lead_vocation].filter(Boolean).join(","), section: "Lead Character"}
   ].filter((x) => x.tags)
   .map((v, i) => <><TagSection tagkey={i} tags={v.tags} header={v.section} /></>);
 
@@ -188,25 +189,31 @@ function BookDetails(props) {
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
-                      Author:
+                      Author{ mysqlBook.bookauthors?.length > 1 && "s" }:
                   </Card.Subtitle>
-                  <div> 
-                  <Link to={"/legacy-library/author/" + slugify(mysqlBook.author_reference)}>{deEntitize(mysqlBook.author_first) + " " + deEntitize(mysqlBook.author_last)}</Link>
-                  </div>
+                  { mysqlBook.bookauthors?.map((a) => (
+                     <div> 
+                     <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
+                     </div>
+                  ))
+                  }
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
-                      Illustrator:
+                      Illustrator{ mysqlBook.bookillustrators?.length > 1 && "s" }:
                   </Card.Subtitle>
-                  <div>
-                  <Link to={"/"}>{mysqlBook.illustrator}</Link>
-                  </div>
+                  { mysqlBook.bookillustrators?.map((a) => (
+                     <div> 
+                     <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
+                     </div>
+                  ))
+                  }
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
                       Publisher:
                   </Card.Subtitle>
-                  <Card.Text>{mysqlBook.publisher}</Card.Text>
+                  <Card.Text>{mysqlBook.publisher_name}</Card.Text>
                   <Card.Subtitle>
                       Date:
                   </Card.Subtitle>
@@ -261,8 +268,6 @@ export const query = graphql`
       id
       secondary_name
       url
-      reference
-      author
       cc_behavior
       cc_discrimination
       cc_health
@@ -272,10 +277,8 @@ export const query = graphql`
       cc_science
       cc_sexuality
       cc_violence_weapons
-      illustrator
       online_link
       tags
-      publisher
       publication_date
       disclaimers
       secondary_tags
@@ -303,10 +306,18 @@ export const query = graphql`
       new_cc_violence_weapons
       new_cc_witchcraft
       pages
-      author_reference
-      author_first
-      author_last
+      bookauthors {
+        first
+        last
+        reference
+      }
+      bookillustrators {
+        first
+        last
+        reference
+      }
       series_name
+      publisher_name
     }
   }
 `
