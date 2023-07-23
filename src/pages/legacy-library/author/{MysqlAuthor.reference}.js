@@ -76,8 +76,8 @@ function AuthorDetails(props) {
   }
 
   // split and array concat the 2 alt name fields that are using inconsistent delims
-  const altNames = (authordetails.alternate_name?.split(/\;|\,/).map((x) => x.trim()).filter((y) => y !== '') ?? []).concat(
-    (authordetails.hidden_alternate?.split(/\;|\,/).map((x) => x.trim()).filter((y) => y !== '') ?? [])
+  const altNames = (authordetails.alternate_name?.split(/;|,/).map((x) => x.trim()).filter((y) => y !== '') ?? []).concat(
+    (authordetails.hidden_alternate?.split(/;|,/).map((x) => x.trim()).filter((y) => y !== '') ?? [])
   )
   
   return (
@@ -184,12 +184,12 @@ function AuthorDetails(props) {
               <Card.Body>
               <Card.Subtitle>Related Authors:</Card.Subtitle> 
               {authorRelationships.length > 0 && authorRelationships.map((rel) => (
-                  <>
+                  <React.Fragment key={"rel_" + rel.relationship + slugify(rel.reference)}>
                   <Card.Text style={{marginBottom: 0}}>{rel.relationship}</Card.Text>
                   <div> 
                   <Link to={"/legacy-library/author/" + slugify(rel.reference)}>{deEntitize(rel.first) + " " + deEntitize(rel.last)}</Link>
                   </div>
-                  </>
+                  </React.Fragment>
               ) )
               }
               </Card.Body> }
@@ -197,7 +197,7 @@ function AuthorDetails(props) {
               <Card.Body>
               <Card.Subtitle>Pseudonym{authordetails.authorpseudonyms.length > 1 && "s"}:</Card.Subtitle> 
               {authordetails.authorpseudonyms?.length > 0 && authordetails.authorpseudonyms.map((pse) => (
-                  <div> 
+                  <div key={"pseu_" + slugify(pse.reference)}> 
                   <Link to={"/legacy-library/author/" + slugify(pse.reference)}>{deEntitize(pse.first) + " " + deEntitize(pse.last)}</Link>
                   </div>
               ) )
@@ -207,7 +207,7 @@ function AuthorDetails(props) {
               <Card.Body>
               <Card.Subtitle>Pseudonym Of:</Card.Subtitle> 
               {authordetails.authorpseudonymofs?.length > 0 && authordetails.authorpseudonymofs.map((pse) => (
-                  <div> 
+                  <div key={"pseuof_" + slugify(pse.reference)}> 
                   <Link to={"/legacy-library/author/" + slugify(pse.reference)}>{deEntitize(pse.first) + " " + deEntitize(pse.last)}</Link>
                   </div>
               ) )
