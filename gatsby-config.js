@@ -88,7 +88,7 @@ module.exports = {
             book.publisher, book.publication_date, book.disclaimers, book.secondary_tags, book.illustration_tags,
             book.subject, book.lead_name, book.lead_gender, book.lead_race_ethnicity_nationality, book.lead_age, book.lead_religion,
             book.lead_character, book.lead_physical, book.lead_vocation, book.location, book.tale_name,
-            series.name as series_name, cc.cc_behavior as new_cc_behavior, cc.cc_discrimination as new_cc_discrimination, 
+            series.name as series_name, series.reference as series_reference, cc.cc_behavior as new_cc_behavior, cc.cc_discrimination as new_cc_discrimination, 
             cc.cc_health as new_cc_health, cc.cc_language as new_cc_language, cc.cc_magic as new_cc_magic,
             cc.cc_religion as new_cc_religion, cc.cc_science as new_cc_science, cc.cc_sexuality as new_cc_sexuality,
             cc.cc_themes as new_cc_themes, cc.cc_violence_weapons as new_cc_violence_weapons, cc.cc_witchcraft as new_cc_witchcraft,
@@ -200,7 +200,33 @@ module.exports = {
             parentName: 'author',
             foreignKey: 'author2_id',
             cardinality: 'OneToMany'
+          },
+          {
+            statement: `select series.cs_rid, series.name, series.description, series.reference, series.status, 
+            series.publisher, series.pages, series.size, series.reading_level, series.series_type, 
+            series.incomplete, series.alternate_name, series.workflow, publisher.name as publisher_name
+            from series
+            left join publisher
+            on series.publisher = publisher.cs_rid;`,
+            idFieldName: 'cs_rid',
+            name: 'series',
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, book.reference, book.series as series_id, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            where book.series <> 0 and book.status <> 'draft' and book.status <> 'hold') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'seriesbooks',
+            parentName: 'series',
+            foreignKey: 'series_id',
+            cardinality: 'OneToMany'
           }
+
         ]
       }
     },

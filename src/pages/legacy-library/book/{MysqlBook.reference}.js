@@ -222,10 +222,15 @@ function BookDetails(props) {
                       Pages:
                   </Card.Subtitle>
                   <Card.Text>{mysqlBook.pages}</Card.Text>
-                  <Card.Subtitle>
+                  { mysqlBook.series_name &&
+                  <>
+                    <Card.Subtitle>
                       Series:
                   </Card.Subtitle>
-                  <Card.Text>{mysqlBook.series_name}</Card.Text>
+                  <div> 
+                     <Link to={"/legacy-library/series/" + slugify(mysqlBook.series_reference)}>{deEntitize(mysqlBook.series_name)}</Link>
+                  </div>
+                  </>}
               </Card.Body>
           </Card>
       </Col>
@@ -317,6 +322,7 @@ export const query = graphql`
         reference
       }
       series_name
+      series_reference
       publisher_name
     }
   }
