@@ -147,10 +147,15 @@ function SeriesDetails(props) {
           </Card>
       </Col>
   </Row>
+  </Container>
+  <Container style={{paddingTop: 24}}>
   <Row className="justify-content-center">
               <Col lg="12" className="mb-4 mb-lg-5">
                 <Card>
+                  <Card.Body>
                     <Card.Title>Books</Card.Title>
+                    </Card.Body>
+                    <Card.Body>
                     <Table striped bordered hover size="sm" variant="dark">
           <thead>
               <tr>
@@ -169,6 +174,7 @@ function SeriesDetails(props) {
         })}
         </tbody>
       </Table>
+      </Card.Body>
                 </Card>
               </Col>
             </Row>
