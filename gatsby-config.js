@@ -225,8 +225,143 @@ module.exports = {
             parentName: 'series',
             foreignKey: 'series_id',
             cardinality: 'OneToMany'
+          },
+          {
+            statement: `select book_decade_l.cs_rid, book_id, decade_id, decade.decade, decade.reference
+            from book_decade_l
+            inner join decade on decade_id = decade.cs_rid;`,
+            idFieldName: 'cs_rid',
+            name: 'bookdecades',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, book.reference, b.decade_id, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            inner join (select book_id, decade_id from book_decade_l) b
+            on b.book_id = book.cs_rid
+            where book.status <> 'draft' and book.status <> 'hold') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'decadebooks',
+            parentName: 'decade',
+            foreignKey: 'decade_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select book_century_l.cs_rid, book_id, century_id, century.name, century.reference
+            from book_century_l
+            inner join century on century_id = century.cs_rid;`,
+            idFieldName: 'cs_rid',
+            name: 'bookcenturies',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, book.reference, b.century_id, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            inner join (select book_id, century_id from book_century_l) b
+            on b.book_id = book.cs_rid
+            where book.status <> 'draft' and book.status <> 'hold') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'centurybooks',
+            parentName: 'century',
+            foreignKey: 'century_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference 
+            FROM reshelve_cs.book_timeperiod_l
+            inner join timeperiod on timeperiod_id = timeperiod.cs_rid
+            where timeperiod.type = 'major';`,
+            idFieldName: 'cs_rid',
+            name: 'bookmajortimeperiods',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, book.reference, b.timeperiod_id, b.cs_type, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
+            on b.book_id = book.cs_rid
+            where book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'majortimeperiodbooks',
+            parentName: 'majortimeperiod',
+            foreignKey: 'timeperiod_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference, timeperiod.region
+            FROM reshelve_cs.book_timeperiod_l
+            inner join timeperiod on timeperiod_id = timeperiod.cs_rid
+            where timeperiod.type = 'minor' and instr(timeperiod.region, char(0)) = 0
+            union SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference, substring_index(timeperiod.region, char(0), 1) as region
+            FROM reshelve_cs.book_timeperiod_l
+            inner join timeperiod on timeperiod_id = timeperiod.cs_rid
+            where timeperiod.type = 'minor' and instr(region, char(0)) <> 0;`,
+            idFieldName: 'cs_rid',
+            name: 'bookminortimeperiods',
+            parentName: 'book',
+            foreignKey: 'book_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, book.reference, b.timeperiod_id, b.cs_type, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
+            on b.book_id = book.cs_rid
+            where book.status <> 'draft' and book.status <> 'hold' and cs_type = 'minor') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'minortimeperiodbooks',
+            parentName: 'minortimeperiod',
+            foreignKey: 'timeperiod_id',
+            cardinality: 'OneToMany'
+          },
+          {
+            statement: `SELECT cs_rid, name, reference, description FROM reshelve_cs.century;`,
+            idFieldName: 'cs_rid',
+            name: 'century'
+          },
+          {
+            statement: `SELECT cs_rid, century, decade, reference FROM reshelve_cs.decade;`,
+            idFieldName: 'cs_rid',
+            name: 'decade'
+          },
+          {
+            statement: `SELECT cs_rid, name, reference, period FROM reshelve_cs.timeperiod where type = 'major';`,
+            idFieldName: 'cs_rid',
+            name: 'majortimeperiod'
+          },
+          // need to clean up bad data that has nulls and stuff after it in some of the region entries
+          {
+            statement: `SELECT cs_rid, name, region, reference, period FROM reshelve_cs.timeperiod where type = 'minor' and instr(region, char(0)) = 0
+            union SELECT cs_rid, name, substring_index(region, char(0), 1) as region, reference, period FROM reshelve_cs.timeperiod where type = 'minor' and instr(region, char(0)) <> 0;;`,
+            idFieldName: 'cs_rid',
+            name: 'minortimeperiod'
           }
-
         ]
       }
     },
