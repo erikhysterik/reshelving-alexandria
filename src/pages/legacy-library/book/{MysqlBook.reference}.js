@@ -251,6 +251,38 @@ function BookDetails(props) {
               { ccSections.length === 0 && <div className="h6">Not Provided</div>}
               </Card.Body>
               <BookTags>{tagSections}</BookTags>
+              <Card.Body>
+            <Card.Subtitle>Time Periods</Card.Subtitle>
+              <div className="h5">
+              <Accordion defaultActiveKey={[0]} alwaysOpen>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Major</Accordion.Header>
+                <Accordion.Body>
+                    { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/timeperiod/major/" + slugify(v.reference, {lower: true})}>{v.name.trim()}</Link></Badge><span> </span></>) ?? ""}
+                </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="1">
+                <Accordion.Header>Minor</Accordion.Header>
+                <Accordion.Body>
+                    { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/timeperiod/" + slugify(v.region, {lower: true}) + "/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
+                </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="2">
+                <Accordion.Header>Centuries</Accordion.Header>
+                <Accordion.Body>
+                    { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/century/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
+                </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="3">
+                <Accordion.Header>Decades</Accordion.Header>
+                <Accordion.Body>
+                    { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/decade/" + slugify(v.reference, {lower: true})}>{v.decade}</Link></Badge><span> </span></>) ?? ""}
+                </Accordion.Body>
+            </Accordion.Item>
+              </Accordion>
+              
+              </div>
+            </Card.Body>
           </Card>
       </Col>
   </Row>
@@ -324,6 +356,23 @@ export const query = graphql`
       series_name
       series_reference
       publisher_name
+      bookcenturies {
+        name
+        reference
+      }
+      bookdecades {
+        decade
+        reference
+      }
+      bookmajortimeperiods {
+        name
+        reference
+      }
+      bookminortimeperiods {
+        name
+        reference
+        region
+      }
     }
   }
 `
