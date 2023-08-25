@@ -217,7 +217,11 @@ function BookDetails(props) {
                   <Card.Subtitle>
                       Date:
                   </Card.Subtitle>
-                  <Card.Text>{mysqlBook.publication_date}</Card.Text>
+                  <div>
+                    <Link to={"/legacy-library/books/published/" + slugify(mysqlBook.noncirca_pub_date)}>{mysqlBook.publication_date}</Link>
+                    </div>
+              </Card.Body>
+              <Card.Body>
                   <Card.Subtitle>
                       Pages:
                   </Card.Subtitle>
@@ -317,6 +321,7 @@ export const query = graphql`
       online_link
       tags
       publication_date
+      noncirca_pub_date
       disclaimers
       secondary_tags
       illustration_tags
