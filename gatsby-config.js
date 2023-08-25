@@ -85,7 +85,7 @@ module.exports = {
             statement: `SELECT book.cs_rid, book.title, book.description, book.reference, book.sort_title, book.secondary_name,
             book.url, book.cc_behavior, book.cc_discrimination, book.cc_health, book.cc_language, book.pages,
             book.cc_magic, book.cc_religion, book.cc_science, book.cc_sexuality, book.cc_violence_weapons, online_link, book.tags,
-            book.publisher, book.publication_date, book.disclaimers, book.secondary_tags, book.illustration_tags,
+            book.publisher, book.publication_date, right(book.publication_date, 4) as noncirca_pub_date, book.disclaimers, book.secondary_tags, book.illustration_tags,
             book.subject, book.lead_name, book.lead_gender, book.lead_race_ethnicity_nationality, book.lead_age, book.lead_religion,
             book.lead_character, book.lead_physical, book.lead_vocation, book.location, book.tale_name,
             series.name as series_name, series.reference as series_reference, cc.cc_behavior as new_cc_behavior, cc.cc_discrimination as new_cc_discrimination, 
@@ -361,6 +361,29 @@ module.exports = {
             union SELECT cs_rid, name, substring_index(region, char(0), 1) as region, reference, period FROM reshelve_cs.timeperiod where type = 'minor' and instr(region, char(0)) <> 0;;`,
             idFieldName: 'cs_rid',
             name: 'minortimeperiod'
+          },
+          {
+            statement: `select row_number() over ( order by publication_date) as rid, publication_date from
+            (select distinct(right(publication_date, 4)) as publication_date from
+            (select * from book where status <> 'draft' and status <> 'hold') a
+            where publication_date <> '') b;`,
+            idFieldName: 'publication_date',
+            name: 'publicationdates'
+          },
+          {
+            statement: `select t.*, ar.first, ar.last from
+            (select book.cs_rid, book.title, book.publication_date, right(book.publication_date, 4) as noncirca_pub_date, book.reference, a.author_id, row_number() over ( order by cs_rid) as rid 
+            from book 
+            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            on a.book_id = book.cs_rid
+            where book.status <> 'draft' and book.status <> 'hold') t
+            left join author ar
+            on t.author_id = ar.cs_rid;`,
+            idFieldName: 'rid',
+            name: 'publicationdatebooks',
+            parentName: 'publicationdates',
+            foreignKey: 'noncirca_pub_date',
+            cardinality: 'OneToMany'
           }
         ]
       }
