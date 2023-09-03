@@ -56,6 +56,7 @@ const TitleStyled = styled(Title)`
 
 const PostCard = ({
   horizontal = false,
+  to = "/",
   img,
   imgBrand,
   preTitle,
@@ -70,7 +71,7 @@ const PostCard = ({
   >
     {horizontal ? (
       <ImageContainerHorizontal>
-        <Link to="/" className="w-100 h-100 d-flex">
+        <Link to={to} className="w-100 h-100 d-flex">
           <img src={img} alt="" className="w-100 img-fluid" />
           {imgBrand && (
             <BrandImage>
@@ -81,7 +82,7 @@ const PostCard = ({
       </ImageContainerHorizontal>
     ) : (
       <Box className="position-relative">
-        <Link to="/" className="w-100 h-100 d-flex">
+        <Link to={to} className="w-100 h-100 d-flex">
           <img src={img} alt="" className="w-100 img-fluid" />
           {imgBrand && (
             <BrandImage>
@@ -99,7 +100,7 @@ const PostCard = ({
         </Text>
       )}
 
-      <Link to="/">
+      <Link to={to}>
         <TitleStyled variant="card" mb="14px">
           {title}
         </TitleStyled>
@@ -109,7 +110,7 @@ const PostCard = ({
       </Text>
       {readMore && (
         <Box>
-          <Link to="/">
+          <Link to={to}>
             <Span color="primary">Continue Reading</Span>
           </Link>
         </Box>
