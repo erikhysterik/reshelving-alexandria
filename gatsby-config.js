@@ -97,7 +97,7 @@ module.exports = {
             left join reshelve_cs.cc on	book.cs_rid = cc.book_id
             left join reshelve_cs.series on series.cs_rid = book.series
             left join reshelve_cs.publisher on publisher.cs_rid = book.publisher
-            WHERE book.status <> 'draft' and book.status <> 'hold' ORDER BY sort_title ASC;`,
+            WHERE book.status <> 'draft' and book.status_notes not like '%hold%' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
           },
@@ -130,7 +130,7 @@ module.exports = {
             FROM reshelve_cs.author_book_l
             inner join book b
             on author_book_l.book_id = b.cs_rid
-            where author_book_l.cs_type = 'basic' and b.status <> 'draft' and b.status <> 'hold';`,
+            where author_book_l.cs_type = 'basic' and b.status <> 'draft' and b.status_notes not like '%hold%';`,
             idFieldName: 'cs_rid',
             name: 'authorbooks',
             parentName: 'author',
@@ -142,7 +142,7 @@ module.exports = {
             FROM reshelve_cs.author_book_l
             inner join book b
             on author_book_l.book_id = b.cs_rid
-            where author_book_l.cs_type = 'illustrator' and b.status <> 'draft' and b.status <> 'hold';`,
+            where author_book_l.cs_type = 'illustrator' and b.status <> 'draft' and b.status_notes not like '%hold%';`,
             idFieldName: 'cs_rid',
             name: 'illustratorbooks',
             parentName: 'author',
@@ -217,7 +217,7 @@ module.exports = {
             from book 
             left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
             on a.book_id = book.cs_rid
-            where book.series <> 0 and book.status <> 'draft' and book.status <> 'hold') t
+            where book.series <> 0 and book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
@@ -244,7 +244,7 @@ module.exports = {
             on a.book_id = book.cs_rid
             inner join (select book_id, decade_id from book_decade_l) b
             on b.book_id = book.cs_rid
-            where book.status <> 'draft' and book.status <> 'hold') t
+            where book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
@@ -271,7 +271,7 @@ module.exports = {
             on a.book_id = book.cs_rid
             inner join (select book_id, century_id from book_century_l) b
             on b.book_id = book.cs_rid
-            where book.status <> 'draft' and book.status <> 'hold') t
+            where book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
@@ -299,7 +299,7 @@ module.exports = {
             on a.book_id = book.cs_rid
             inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
             on b.book_id = book.cs_rid
-            where book.status <> 'draft' and book.status <> 'hold' and cs_type = 'basic') t
+            where book.status <> 'draft' and book.status_notes not like '%hold%' and cs_type = 'basic') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
@@ -331,7 +331,7 @@ module.exports = {
             on a.book_id = book.cs_rid
             inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
             on b.book_id = book.cs_rid
-            where book.status <> 'draft' and book.status <> 'hold' and cs_type = 'minor') t
+            where book.status <> 'draft' and book.status_notes not like '%hold%' and cs_type = 'minor') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
@@ -365,7 +365,7 @@ module.exports = {
           {
             statement: `select row_number() over ( order by publication_date) as rid, publication_date from
             (select distinct(right(publication_date, 4)) as publication_date from
-            (select * from book where status <> 'draft' and status <> 'hold') a
+            (select * from book where status <> 'draft' and status_notes not like '%hold%') a
             where publication_date <> '') b;`,
             idFieldName: 'publication_date',
             name: 'publicationdates'
@@ -376,7 +376,7 @@ module.exports = {
             from book 
             left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
             on a.book_id = book.cs_rid
-            where book.status <> 'draft' and book.status <> 'hold') t
+            where book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
             on t.author_id = ar.cs_rid;`,
             idFieldName: 'rid',
