@@ -83,7 +83,8 @@ function SendToNotionButton(props) {
             pagecount: props.pages,
             description: props.description,
             contentconsiderations: props.ccs,
-            tags: props.tags
+            tags: props.tags,
+            authorillustrator: props.author_illustrator
         }
     )
     
@@ -174,6 +175,7 @@ function BookDetails(props) {
                     description={deEntitize(mysqlBook.description).replace( /(<([^>]+)>)/ig, '').trim().replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&apos;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')}
                     ccs={ccTypes.length ? ccTypes.map(x => x.cc).reduce((prev, cur) => prev + '\n' + deEntitize(cur)).replace( /(<([^>]+)>)/ig, '').trim().replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&apos;/g, '\'').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') : ""}
                     tags={mysqlBook.subject ? mysqlBook.subject.split(',').filter(Boolean).map(x => x.trim().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())) : []}
+                    author_illustrator={(mysqlBook.bookauthors ? mysqlBook.bookauthors.map(x => deEntitize(x.first) + " " + deEntitize(x.last)) : []).concat(mysqlBook.bookillustrators ? mysqlBook.bookillustrators.map(x => deEntitize(x.first) + " " + deEntitize(x.last)) : [])}
                     />
                   </Box>
               </Col>
@@ -198,6 +200,7 @@ function BookDetails(props) {
                   ))
                   }
               </Card.Body>
+              { mysqlBook.bookillustrators?.length &&
               <Card.Body>
                   <Card.Subtitle>
                       Illustrator{ mysqlBook.bookillustrators?.length > 1 && "s" }:
@@ -209,6 +212,7 @@ function BookDetails(props) {
                   ))
                   }
               </Card.Body>
+              }
               <Card.Body>
                   <Card.Subtitle>
                       Publisher:
