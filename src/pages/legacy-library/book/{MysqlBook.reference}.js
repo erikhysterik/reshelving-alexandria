@@ -240,6 +240,12 @@ function BookDetails(props) {
                   </div>
                   </>}
               </Card.Body>
+              <Card.Body>
+                  <Card.Subtitle>
+                      Genre:
+                  </Card.Subtitle>
+                  <Card.Text>Coming Soon!</Card.Text>
+              </Card.Body>
           </Card>
       </Col>
       <Col md={8} xl={9}>
