@@ -93,17 +93,17 @@ module.exports = {
             cc.cc_religion as new_cc_religion, cc.cc_science as new_cc_science, cc.cc_sexuality as new_cc_sexuality,
             cc.cc_themes as new_cc_themes, cc.cc_violence_weapons as new_cc_violence_weapons, cc.cc_witchcraft as new_cc_witchcraft,
             publisher.name as publisher_name
-            FROM reshelve_cs.book 
-            left join reshelve_cs.cc on	book.cs_rid = cc.book_id
-            left join reshelve_cs.series on series.cs_rid = book.series
-            left join reshelve_cs.publisher on publisher.cs_rid = book.publisher
+            FROM book 
+            left join cc on	book.cs_rid = cc.book_id
+            left join series on series.cs_rid = book.series
+            left join publisher on publisher.cs_rid = book.publisher
             WHERE book.status <> 'draft' and book.status_notes not like '%hold%' ORDER BY sort_title ASC;`,
             idFieldName: 'cs_rid',
             name: 'book'
           },
           {
             statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, a.first, a.last, a.reference 
-            FROM reshelve_cs.author_book_l
+            FROM author_book_l
             inner join author a
             on author_book_l.author_id = a.cs_rid
             where author_book_l.cs_type = 'basic';`,
@@ -115,7 +115,7 @@ module.exports = {
           },
           {
             statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, a.first, a.last, a.reference 
-            FROM reshelve_cs.author_book_l
+            FROM author_book_l
             inner join author a
             on author_book_l.author_id = a.cs_rid
             where author_book_l.cs_type = 'illustrator';`,
@@ -127,7 +127,7 @@ module.exports = {
           },
           {
             statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, b.title, b.reference, b.publication_date 
-            FROM reshelve_cs.author_book_l
+            FROM author_book_l
             inner join book b
             on author_book_l.book_id = b.cs_rid
             where author_book_l.cs_type = 'basic' and b.status <> 'draft' and b.status_notes not like '%hold%';`,
@@ -139,7 +139,7 @@ module.exports = {
           },
           {
             statement: `SELECT author_book_l.cs_rid, author_book_l.book_id, author_book_l.author_id, b.title, b.reference, b.publication_date 
-            FROM reshelve_cs.author_book_l
+            FROM author_book_l
             inner join book b
             on author_book_l.book_id = b.cs_rid
             where author_book_l.cs_type = 'illustrator' and b.status <> 'draft' and b.status_notes not like '%hold%';`,
@@ -282,7 +282,7 @@ module.exports = {
           },
           {
             statement: `SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference 
-            FROM reshelve_cs.book_timeperiod_l
+            FROM book_timeperiod_l
             inner join timeperiod on timeperiod_id = timeperiod.cs_rid
             where timeperiod.type = 'major';`,
             idFieldName: 'cs_rid',
@@ -310,11 +310,11 @@ module.exports = {
           },
           {
             statement: `SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference, timeperiod.region
-            FROM reshelve_cs.book_timeperiod_l
+            FROM book_timeperiod_l
             inner join timeperiod on timeperiod_id = timeperiod.cs_rid
             where timeperiod.type = 'minor' and instr(timeperiod.region, char(0)) = 0
             union SELECT book_timeperiod_l.cs_rid, book_id, timeperiod_id, timeperiod.name, timeperiod.type, timeperiod.reference, substring_index(timeperiod.region, char(0), 1) as region
-            FROM reshelve_cs.book_timeperiod_l
+            FROM book_timeperiod_l
             inner join timeperiod on timeperiod_id = timeperiod.cs_rid
             where timeperiod.type = 'minor' and instr(region, char(0)) <> 0;`,
             idFieldName: 'cs_rid',
@@ -341,24 +341,24 @@ module.exports = {
             cardinality: 'OneToMany'
           },
           {
-            statement: `SELECT cs_rid, name, reference, description FROM reshelve_cs.century;`,
+            statement: `SELECT cs_rid, name, reference, description FROM century;`,
             idFieldName: 'cs_rid',
             name: 'century'
           },
           {
-            statement: `SELECT cs_rid, century, decade, reference FROM reshelve_cs.decade;`,
+            statement: `SELECT cs_rid, century, decade, reference FROM decade;`,
             idFieldName: 'cs_rid',
             name: 'decade'
           },
           {
-            statement: `SELECT cs_rid, name, reference, period FROM reshelve_cs.timeperiod where type = 'major';`,
+            statement: `SELECT cs_rid, name, reference, period FROM timeperiod where type = 'major';`,
             idFieldName: 'cs_rid',
             name: 'majortimeperiod'
           },
           // need to clean up bad data that has nulls and stuff after it in some of the region entries
           {
-            statement: `SELECT cs_rid, name, region, reference, period FROM reshelve_cs.timeperiod where type = 'minor' and instr(region, char(0)) = 0
-            union SELECT cs_rid, name, substring_index(region, char(0), 1) as region, reference, period FROM reshelve_cs.timeperiod where type = 'minor' and instr(region, char(0)) <> 0;;`,
+            statement: `SELECT cs_rid, name, region, reference, period FROM timeperiod where type = 'minor' and instr(region, char(0)) = 0
+            union SELECT cs_rid, name, substring_index(region, char(0), 1) as region, reference, period FROM timeperiod where type = 'minor' and instr(region, char(0)) <> 0;;`,
             idFieldName: 'cs_rid',
             name: 'minortimeperiod'
           },
