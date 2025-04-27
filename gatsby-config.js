@@ -78,7 +78,8 @@ module.exports = {
           host: `${process.env.MYSQL_HOST}`,
           user: `${process.env.MYSQL_USER}`,
           password: `${process.env.MYSQL_PW}`,
-          database: `${process.env.MYSQL_DB}`
+          database: `${process.env.MYSQL_DB}`,
+          port: `${process.env.MYSQL_PORT}`,
         },
         queries: [
           {
@@ -150,7 +151,7 @@ module.exports = {
             cardinality: 'OneToMany'
           },
           {
-            statement: "SELECT * FROM alltags group by tag;",
+            statement: "SELECT * FROM alltags WHERE id IN (SELECT MIN(id) as id FROM alltags GROUP BY tag) order by tag asc;",
             idFieldName: 'id',
             name: 'tag'
           },
@@ -215,7 +216,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, book.reference, book.series as series_id, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             where book.series <> 0 and book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
@@ -240,7 +248,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, book.reference, b.decade_id, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             inner join (select book_id, decade_id from book_decade_l) b
             on b.book_id = book.cs_rid
@@ -267,7 +282,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, book.reference, b.century_id, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             inner join (select book_id, century_id from book_century_l) b
             on b.book_id = book.cs_rid
@@ -295,7 +317,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, book.reference, b.timeperiod_id, b.cs_type, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
             on b.book_id = book.cs_rid
@@ -327,7 +356,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, book.reference, b.timeperiod_id, b.cs_type, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             inner join (select book_id, cs_type, timeperiod_id from book_timeperiod_l) b
             on b.book_id = book.cs_rid
@@ -374,7 +410,14 @@ module.exports = {
             statement: `select t.*, ar.first, ar.last from
             (select book.cs_rid, book.title, book.publication_date, right(book.publication_date, 4) as noncirca_pub_date, book.reference, a.author_id, row_number() over ( order by cs_rid) as rid 
             from book 
-            left join (select book_id, author_id from author_book_l where cs_type='basic' group by book_id) a
+            left join (SELECT abl.book_id, abl.author_id
+                FROM author_book_l abl
+                JOIN (
+                    SELECT book_id, min(cs_rid) AS min_id
+                    FROM author_book_l
+                    WHERE cs_type = 'basic'
+                    GROUP BY book_id
+                ) min_abl ON abl.cs_rid = min_abl.min_id) a
             on a.book_id = book.cs_rid
             where book.status <> 'draft' and book.status_notes not like '%hold%') t
             left join author ar
