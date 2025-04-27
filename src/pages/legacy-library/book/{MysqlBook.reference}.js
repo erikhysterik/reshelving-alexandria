@@ -193,11 +193,11 @@ function BookDetails(props) {
                   <Card.Subtitle>
                       Author{ mysqlBook.bookauthors?.length > 1 && "s" }:
                   </Card.Subtitle>
-                  { mysqlBook.bookauthors?.length ? mysqlBook.bookauthors?.map((a) => (
+                  { mysqlBook.bookauthors?.length > 0 ? mysqlBook.bookauthors?.map((a) => (
                      <div>
                      <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
                      </div>
-                  )) : <div>N/A</div>
+                  )) : <Card.Text>N/A</Card.Text>
                   }
               </Card.Body>
               { mysqlBook.bookillustrators?.length > 0 &&
@@ -217,19 +217,23 @@ function BookDetails(props) {
                   <Card.Subtitle>
                       Publisher:
                   </Card.Subtitle>
-                  <Card.Text>{mysqlBook.publisher_name}</Card.Text>
+                  <Card.Text>{mysqlBook.publisher_name || "N/A"}</Card.Text>
                   <Card.Subtitle>
                       Date:
                   </Card.Subtitle>
-                  <div>
-                    <Link to={"/legacy-library/books/published/" + slugify(mysqlBook.noncirca_pub_date)}>{mysqlBook.publication_date}</Link>
-                    </div>
+                  { mysqlBook.publication_date ?
+                     <div>
+                     <Link to={"/legacy-library/books/published/" + slugify(mysqlBook.noncirca_pub_date)}>{mysqlBook.publication_date}</Link>
+                     </div>
+                     : <Card.Text>N/A</Card.Text>
+                  }
+                  
               </Card.Body>
               <Card.Body>
                   <Card.Subtitle>
                       Pages:
                   </Card.Subtitle>
-                  <Card.Text>{mysqlBook.pages}</Card.Text>
+                  <Card.Text>{mysqlBook.pages || "N/A"}</Card.Text>
                   { mysqlBook.series_name &&
                   <>
                     <Card.Subtitle>
