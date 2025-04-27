@@ -193,14 +193,14 @@ function BookDetails(props) {
                   <Card.Subtitle>
                       Author{ mysqlBook.bookauthors?.length > 1 && "s" }:
                   </Card.Subtitle>
-                  { mysqlBook.bookauthors?.map((a) => (
-                     <div> 
+                  { mysqlBook.bookauthors?.length ? mysqlBook.bookauthors?.map((a) => (
+                     <div>
                      <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
                      </div>
-                  ))
+                  )) : <div>N/A</div>
                   }
               </Card.Body>
-              { mysqlBook.bookillustrators?.length &&
+              { mysqlBook.bookillustrators?.length > 0 &&
               <Card.Body>
                   <Card.Subtitle>
                       Illustrator{ mysqlBook.bookillustrators?.length > 1 && "s" }:
