@@ -4,6 +4,10 @@ export async function GET(request, { params }) {
   try {
     const { tag } = params
 
+    // Decode the slugified tag back to the original tag name
+    // This handles cases where the tag might have been URL-encoded before slugification
+    const decodedTag = decodeURIComponent(tag.replace(/-/g, ' '))
+
     const sql = `
       SELECT book.cs_rid, book.title, book.description, book.reference, book.sort_title, book.secondary_name,
       book.url, book.cc_behavior, book.cc_discrimination, book.cc_health, book.cc_language, book.pages,
@@ -36,7 +40,7 @@ export async function GET(request, { params }) {
       ORDER BY sort_title ASC;
     `
 
-    const searchTag = `%${tag}%`
+    const searchTag = `%${decodedTag}%`
     const books = await query(sql, [searchTag, searchTag, searchTag, searchTag])
     return Response.json(books)
   } catch (error) {

@@ -41,6 +41,7 @@ export default function TagDetailPage({ params }) {
   React.useEffect(() => {
     const fetchBooks = async () => {
       try {
+        // Use the slugified tag for the API call
         const response = await fetch(`/api/books/tag/${params.tag}`)
         const data = await response.json()
         setBooks(data)
@@ -82,7 +83,7 @@ export default function TagDetailPage({ params }) {
                     <Link href="/legacy-library/tag">Tags</Link>
                   </BreadcrumbItem>
                   <BreadcrumbItem active>
-                    <Link href={`/legacy-library/tag/${params.tag}`}>{decodeURIComponent(params.tag)}</Link>
+                    <Link href={`/legacy-library/tag/${params.tag}`}>{decodeURIComponent(params.tag.replace(/-/g, ' '))}</Link>
                   </BreadcrumbItem>
                 </Breadcrumb>
               </Col>
@@ -93,7 +94,7 @@ export default function TagDetailPage({ params }) {
             <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
                 <Box>
-                  <Title variant="hero">Books Tagged "{decodeURIComponent(params.tag)}"</Title>
+                  <Title variant="hero">Books Tagged "{decodeURIComponent(params.tag.replace(/-/g, ' '))}"</Title>
                 </Box>
               </Col>
             </Row>
@@ -124,7 +125,7 @@ export default function TagDetailPage({ params }) {
                       ) : tagList.length === 0 ? (
                         <tr>
                           <td colSpan="3" className="text-center">
-                            No books found with tag "{decodeURIComponent(params.tag)}".
+                            No books found with tag "{decodeURIComponent(params.tag.replace(/-/g, ' '))}".
                           </td>
                         </tr>
                       ) : (
