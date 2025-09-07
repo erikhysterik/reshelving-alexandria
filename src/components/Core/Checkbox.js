@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { uniqueId } from "lodash";
 import styled from "styled-components";
