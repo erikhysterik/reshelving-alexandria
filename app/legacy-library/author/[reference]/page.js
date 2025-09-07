@@ -4,7 +4,7 @@ import React from 'react'
 import { notFound } from 'next/navigation'
 import PageWrapper from '../../../../components/PageWrapper'
 import SearchWidget from '../../../../components/SearchWidget'
-import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, ListGroup } from "react-bootstrap"
+import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, ListGroup, Table } from "react-bootstrap"
 import { Title, Box } from "../../../../src/components/Core"
 import styled from "styled-components"
 import Link from 'next/link'
@@ -148,18 +148,36 @@ export default function AuthorPage({ params }) {
                   {books.length > 0 && (
                     <Card.Body>
                       <Card.Subtitle>Books by this Author</Card.Subtitle>
-                      <ListGroup variant="flush">
-                        {books.map((book) => (
-                          <ListGroup.Item key={book.cs_rid}>
-                            <Link href={`/legacy-library/book/${slugify(book.reference || 'unknown')}`}>
-                              {deEntitize(book.title)}
-                            </Link>
-                            {book.publication_date && (
-                              <small className="text-muted"> ({book.publication_date})</small>
-                            )}
-                          </ListGroup.Item>
-                        ))}
-                      </ListGroup>
+                      <Table striped bordered hover responsive className="mt-3">
+                        <thead>
+                          <tr>
+                            <th>Title</th>
+                            <th>Role</th>
+                            <th>Published</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {books.map((book) => (
+                            <tr key={book.cs_rid}>
+                              <td>
+                                <Link href={`/legacy-library/book/${slugify(book.reference || 'unknown')}`}>
+                                  {deEntitize(book.title)}
+                                </Link>
+                              </td>
+                              <td>
+                                {book.all_roles.map((role, index) => (
+                                  <span key={role} className={`badge ${role === 'basic' ? 'bg-primary' : 'bg-success'} ${index > 0 ? 'ms-1' : ''}`}>
+                                    {role === 'basic' ? 'Author' : 'Illustrator'}
+                                  </span>
+                                ))}
+                              </td>
+                              <td>
+                                {book.publication_date || 'Unknown'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
                     </Card.Body>
                   )}
                 </Card>
