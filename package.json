@@ -51,6 +51,5 @@
     "prettier": "^2.5.1",
     "eslint": "^8.0.0",
     "eslint-config-next": "^13.5.0"
-  },
-  "packageManager": "yarn@3.1.1"
+  }
 }

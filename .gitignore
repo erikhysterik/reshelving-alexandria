@@ -64,6 +64,9 @@ public
 .next/
 out/
 
+# Backup directories (keep locally but don't commit)
+pages_backup/
+
 # Mac files
 .DS_Store
 

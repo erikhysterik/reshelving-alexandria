@@ -6,7 +6,7 @@ import { InstantSearch } from "react-instantsearch-dom"
 import { ThemeProvider } from "styled-components"
 import useClickOutside from "../src/components/SearchWidget/use-click-outside"
 import StyledSearchBox from "../src/components/SearchWidget/styled-search-box"
-import StyledSearchResult from "../src/components/SearchWidget/styled-search-result"
+import StyledSearchResult from "./StyledSearchResult"
 import StyledSearchRoot from "../src/components/SearchWidget/styled-search-root"
 
 const theme = {

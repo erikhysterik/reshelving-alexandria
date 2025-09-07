@@ -1,7 +1,8 @@
 import React from 'react'
-import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion } from "react-bootstrap"
+import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion, Button } from "react-bootstrap"
 import Link from 'next/link'
 import { deEntitize } from '../src/utils'
+import SearchWidget from './SearchWidget'
 
 function BookTags({ children }) {
   return (
@@ -37,6 +38,51 @@ function ContentConsideration({ tagkey, cc, header }) {
       <Accordion.Body dangerouslySetInnerHTML={{ __html: cc }} />
     </Accordion.Item>
   )
+}
+
+function SendToNotionButton(props) {
+  const [isLoading, setLoading] = React.useState(false);
+
+  let body = JSON.stringify(
+    {
+      title: props.title,
+      pubdate: props.publication_date,
+      pagecount: props.pages,
+      description: props.description,
+      contentconsiderations: props.ccs,
+      tags: props.tags,
+      authorillustrator: props.author_illustrator
+    }
+  )
+
+  const options = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: body
+  };
+
+  React.useEffect(() => {
+    if (isLoading) {
+      fetch(`${process.env.GATSBY_LAMBDA_SAVE_URL}`, options).then(() => {
+        setLoading(false);
+      });
+    }
+  }, [isLoading]);
+
+  const handleClick = () => setLoading(true);
+
+  return (
+    <Button
+      variant="primary"
+      disabled={isLoading}
+      onClick={!isLoading ? handleClick : null}
+    >
+      {isLoading ? 'Saving...' : 'Send To Notion'}
+    </Button>
+  );
 }
 
 export default function BookDetails({ data }) {
@@ -91,11 +137,23 @@ export default function BookDetails({ data }) {
               </BreadcrumbItem>
             </Breadcrumb>
           </Col>
+          <Col xs={2}>
+            <SearchWidget indices={[{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]} />
+          </Col>
         </Row>
         <Row className="justify-content-center">
           <Col lg="11" className="mb-4 mb-lg-5">
             <div>
               <h1 className="block-title">{deEntitize(mysqlBook.title)}</h1>
+              <SendToNotionButton
+                title={deEntitize(mysqlBook.title)}
+                publication_date={mysqlBook.publication_date}
+                pages={mysqlBook.pages}
+                description={deEntitize(mysqlBook.description).replace( /(<([^>]+)>)/ig, '').trim().replace(/&/g, '&').replace(/&nbsp;/g, ' ').replace(/'/g, '\'').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"')}
+                ccs={ccTypes.length ? ccTypes.map(x => x.cc).reduce((prev, cur) => prev + '\n' + deEntitize(cur)).replace( /(<([^>]+)>)/ig, '').trim().replace(/&/g, '&').replace(/&nbsp;/g, ' ').replace(/'/g, '\'').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"') : ""}
+                tags={mysqlBook.subject ? mysqlBook.subject.split(',').filter(Boolean).map(x => x.trim().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())) : []}
+                author_illustrator={(mysqlBook.bookauthors ? mysqlBook.bookauthors.map(x => deEntitize(x.first) + " " + deEntitize(x.last)) : []).concat(mysqlBook.bookillustrators ? mysqlBook.bookillustrators.map(x => deEntitize(x.first) + " " + deEntitize(x.last)) : [])}
+              />
             </div>
           </Col>
         </Row>
@@ -169,6 +227,53 @@ export default function BookDetails({ data }) {
                 {ccSections.length === 0 && <div className="h6">Not Provided</div>}
               </Card.Body>
               <BookTags>{tagSections}</BookTags>
+              <Card.Body>
+                <Card.Subtitle>Time Periods</Card.Subtitle>
+                <div className="h5">
+                  <Accordion defaultActiveKey={[0]} alwaysOpen>
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>Major</Accordion.Header>
+                      <Accordion.Body>
+                        { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => (
+                          <><Badge key={i} bg='info' text="light">
+                            <Link href={`/legacy-library/books/timeperiod/major/${v.reference}`}>{v.name.trim()}</Link>
+                          </Badge><span> </span></>
+                        )) ?? ""}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="1">
+                      <Accordion.Header>Minor</Accordion.Header>
+                      <Accordion.Body>
+                        { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => (
+                          <><Badge key={i} bg='info' text="light">
+                            <Link href={`/legacy-library/books/timeperiod/${v.region}/${v.reference}`}>{v.name}</Link>
+                          </Badge><span> </span></>
+                        )) ?? ""}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                      <Accordion.Header>Centuries</Accordion.Header>
+                      <Accordion.Body>
+                        { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => (
+                          <><Badge key={i} bg='info' text="light">
+                            <Link href={`/legacy-library/books/century/${v.reference}`}>{v.name}</Link>
+                          </Badge><span> </span></>
+                        )) ?? ""}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="3">
+                      <Accordion.Header>Decades</Accordion.Header>
+                      <Accordion.Body>
+                        { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => (
+                          <><Badge key={i} bg='info' text="light">
+                            <Link href={`/legacy-library/books/decade/${v.reference}`}>{v.decade}</Link>
+                          </Badge><span> </span></>
+                        )) ?? ""}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                </div>
+              </Card.Body>
             </Card>
           </Col>
         </Row>
