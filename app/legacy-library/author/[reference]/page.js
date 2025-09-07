@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react'
 import { notFound } from 'next/navigation'
 import PageWrapper from '../../../../components/PageWrapper'
 import SearchWidget from '../../../../components/SearchWidget'
