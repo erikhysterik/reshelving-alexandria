@@ -6,7 +6,7 @@ export async function GET(request, { params }) {
 
     // Get series details
     const seriesSql = `
-      SELECT cs_rid, name, reference, description, status, publisher, pages, size, reading_level, series_type, incomplete, alternate_name, workflow, publisher_name
+      SELECT series.cs_rid, series.name, series.reference, series.description, series.status, series.publisher, series.pages, series.size, series.reading_level, series.series_type, series.incomplete, series.alternate_name, series.workflow, publisher.name as publisher_name
       FROM series
       LEFT JOIN publisher ON series.publisher = publisher.cs_rid
       WHERE series.reference = ?
