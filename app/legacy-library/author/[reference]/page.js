@@ -83,14 +83,14 @@ export default async function AuthorPage({ params }) {
               <Row className="d-flex align-items-center">
                 <Col>
                   <Breadcrumb>
-                    <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={false}>
-                      Legacy Library
+                    <BreadcrumbItem>
+                      <Link href="/legacy-library">Legacy Library</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={false}>
-                      Legacy Library
+                    <BreadcrumbItem>
+                      <Link href="/legacy-library/authors">Authors</Link>
                     </BreadcrumbItem>
-                    <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/author/${author.reference || 'unknown'}` }} title={`${deEntitize(author.first)} ${deEntitize(author.last)}`} active={true}>
-                      {deEntitize(author.first)} {deEntitize(author.last)}
+                    <BreadcrumbItem active>
+                      <Link href={`/legacy-library/author/${author.reference || 'unknown'}`}>{`${deEntitize(author.first)} ${deEntitize(author.last)}`}</Link>
                     </BreadcrumbItem>
                   </Breadcrumb>
                 </Col>

@@ -37,11 +37,11 @@ export default function LegacyLibraryClient() {
             <Row className="d-flex align-items-center">
               <Col>
                 <Breadcrumb>
-                  <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={true}>
-                    Legacy Library
+                  <BreadcrumbItem active>
+                    <Link href="/legacy-library">Legacy Library</Link>
                   </BreadcrumbItem>
-                  <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/books' }} title="Books" active={false}>
-                    Books
+                  <BreadcrumbItem>
+                    <Link href="/legacy-library/books">Books</Link>
                   </BreadcrumbItem>
                 </Breadcrumb>
               </Col>

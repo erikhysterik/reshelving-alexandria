@@ -126,14 +126,14 @@ export default function BookDetails({ data }) {
         <Row className="d-flex align-items-center">
           <Col>
             <Breadcrumb>
-              <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library">
-                Legacy Library
+              <BreadcrumbItem>
+                <Link href="/legacy-library">Legacy Library</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/books' }} title="Books">
-                Books
+              <BreadcrumbItem>
+                <Link href="/legacy-library/books">Books</Link>
               </BreadcrumbItem>
-              <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/book/${mysqlBook.reference || 'unknown'}` }} title={deEntitize(mysqlBook.title)} active>
-                {deEntitize(mysqlBook.title)}
+              <BreadcrumbItem active>
+                <Link href={`/legacy-library/book/${mysqlBook.reference || 'unknown'}`}>{deEntitize(mysqlBook.title)}</Link>
               </BreadcrumbItem>
             </Breadcrumb>
           </Col>

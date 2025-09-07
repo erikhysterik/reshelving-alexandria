@@ -74,11 +74,11 @@ export default function BooksPage() {
             <Row className="d-flex align-items-center">
               <Col>
                 <Breadcrumb>
-                  <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={false}>
-                    Legacy Library
+                  <BreadcrumbItem>
+                    <Link href="/legacy-library">Legacy Library</Link>
                   </BreadcrumbItem>
-                  <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/books' }} title="Books" active={true}>
-                    Books
+                  <BreadcrumbItem active>
+                    <Link href="/legacy-library/books">Books</Link>
                   </BreadcrumbItem>
                 </Breadcrumb>
               </Col>
