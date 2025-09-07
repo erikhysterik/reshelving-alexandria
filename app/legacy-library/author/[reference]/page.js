@@ -1,7 +1,6 @@
 "use client";
 
 import { notFound } from 'next/navigation'
-import { getAuthorByReference, getAllAuthorReferences, getAuthorBooks } from '../../../../lib/queries'
 import PageWrapper from '../../../../components/PageWrapper'
 import SearchWidget from '../../../../components/SearchWidget'
 import { Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, ListGroup } from "react-bootstrap"
@@ -30,150 +29,144 @@ const BoxStyled = styled(Box)`
   }
 `
 
-// Generate static paths for all authors
-export async function generateStaticParams() {
-  try {
-    const references = await getAllAuthorReferences()
-    return references.map((reference) => ({
-      reference: reference,
-    }))
-  } catch (error) {
-    console.error('Error generating static params for authors:', error)
-    return []
-  }
-}
+export default function AuthorPage({ params }) {
+  const [author, setAuthor] = React.useState(null)
+  const [books, setBooks] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
 
-// Generate metadata for each author
-export async function generateMetadata({ params }) {
-  try {
-    const author = await getAuthorByReference(params.reference)
-
-    if (!author) {
-      return {
-        title: 'Author Not Found',
+  React.useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        const response = await fetch(`/api/authors/${params.reference}`)
+        if (response.ok) {
+          const data = await response.json()
+          setAuthor(data.author)
+          setBooks(data.books)
+        } else {
+          notFound()
+        }
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching author:', error)
+        setLoading(false)
       }
     }
 
-    return {
-      title: `${deEntitize(author.first)} ${deEntitize(author.last)} - Author`,
-      description: author.bio ? deEntitize(author.bio).substring(0, 160) : `Books by ${deEntitize(author.first)} ${deEntitize(author.last)}`,
-    }
-  } catch (error) {
-    console.error('Error generating metadata for author:', error)
-    return {
-      title: 'Author Details',
-    }
-  }
-}
+    fetchAuthor()
+  }, [params.reference])
 
-export default async function AuthorPage({ params }) {
-  try {
-    const author = await getAuthorByReference(params.reference)
-
-    if (!author) {
-      notFound()
-    }
-
-    const authorBooks = await getAuthorBooks(author.cs_rid)
-
+  if (loading) {
     return (
-      <>
-        <PageWrapper footerDark>
-          <BoxStyled>
-            <div className="pt-5 mt-5"></div>
-            <Container>
-              <Row className="d-flex align-items-center">
-                <Col>
-                  <Breadcrumb>
-                    <BreadcrumbItem>
-                      <Link href="/legacy-library">Legacy Library</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                      <Link href="/legacy-library/authors">Authors</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem active>
-                      <Link href={`/legacy-library/author/${author.reference || 'unknown'}`}>{`${deEntitize(author.first)} ${deEntitize(author.last)}`}</Link>
-                    </BreadcrumbItem>
-                  </Breadcrumb>
-                </Col>
-                <Col xs={2}>
-                  <SearchWidget className="float-end" indices={searchIndices} />
-                </Col>
-              </Row>
-              <Row className="justify-content-center">
-                <Col lg="11" className="mb-4 mb-lg-5">
-                  <Box>
-                    <Title variant="hero">{deEntitize(author.first)} {deEntitize(author.last)}</Title>
-                  </Box>
-                </Col>
-              </Row>
-              <Row>
-                <Col md={4} xl={3}>
-                  <Card>
-                    <Card.Body>
-                      <Card.Title>Author Details</Card.Title>
-                    </Card.Body>
-                    <Card.Body>
-                      <Card.Subtitle>Name</Card.Subtitle>
-                      <Card.Text>{deEntitize(author.first)} {deEntitize(author.last)}</Card.Text>
-                    </Card.Body>
-                    {author.nationality && (
-                      <Card.Body>
-                        <Card.Subtitle>Nationality</Card.Subtitle>
-                        <Card.Text>{author.nationality}</Card.Text>
-                      </Card.Body>
-                    )}
-                    {author.dates && (
-                      <Card.Body>
-                        <Card.Subtitle>Dates</Card.Subtitle>
-                        <Card.Text>{author.dates}</Card.Text>
-                      </Card.Body>
-                    )}
-                    {author.type && (
-                      <Card.Body>
-                        <Card.Subtitle>Type</Card.Subtitle>
-                        <Card.Text>{author.type}</Card.Text>
-                      </Card.Body>
-                    )}
-                  </Card>
-                </Col>
-                <Col md={8} xl={9}>
-                  <Card>
-                    <Card.Body>
-                      <Card.Subtitle>Biography</Card.Subtitle>
-                      {author.bio ? (
-                        <Card.Body dangerouslySetInnerHTML={{ __html: deEntitize(author.bio) }} />
-                      ) : (
-                        <Card.Text>No biography available.</Card.Text>
-                      )}
-                    </Card.Body>
-                    {authorBooks.length > 0 && (
-                      <Card.Body>
-                        <Card.Subtitle>Books by this Author</Card.Subtitle>
-                        <ListGroup variant="flush">
-                          {authorBooks.map((book) => (
-                            <ListGroup.Item key={book.cs_rid}>
-                              <Link href={`/legacy-library/book/${slugify(book.reference || 'unknown')}`}>
-                                {deEntitize(book.title)}
-                              </Link>
-                              {book.publication_date && (
-                                <small className="text-muted"> ({book.publication_date})</small>
-                              )}
-                            </ListGroup.Item>
-                          ))}
-                        </ListGroup>
-                      </Card.Body>
-                    )}
-                  </Card>
-                </Col>
-              </Row>
-            </Container>
-          </BoxStyled>
-        </PageWrapper>
-      </>
+      <PageWrapper footerDark>
+        <Container>
+          <Row className="justify-content-center">
+            <Col lg="11" className="mb-4 mb-lg-5">
+              <div className="text-center">Loading author...</div>
+            </Col>
+          </Row>
+        </Container>
+      </PageWrapper>
     )
-  } catch (error) {
-    console.error('Error loading author:', error)
+  }
+
+  if (!author) {
     notFound()
   }
+
+  return (
+    <>
+      <PageWrapper footerDark>
+        <BoxStyled>
+          <div className="pt-5 mt-5"></div>
+          <Container>
+            <Row className="d-flex align-items-center">
+              <Col>
+                <Breadcrumb>
+                  <BreadcrumbItem>
+                    <Link href="/legacy-library">Legacy Library</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem>
+                    <Link href="/legacy-library/authors">Authors</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>
+                    <Link href={`/legacy-library/author/${author.reference || 'unknown'}`}>{`${deEntitize(author.first)} ${deEntitize(author.last)}`}</Link>
+                  </BreadcrumbItem>
+                </Breadcrumb>
+              </Col>
+              <Col xs={2}>
+                <SearchWidget className="float-end" indices={searchIndices} />
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col lg="11" className="mb-4 mb-lg-5">
+                <Box>
+                  <Title variant="hero">{deEntitize(author.first)} {deEntitize(author.last)}</Title>
+                </Box>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={4} xl={3}>
+                <Card>
+                  <Card.Body>
+                    <Card.Title>Author Details</Card.Title>
+                  </Card.Body>
+                  <Card.Body>
+                    <Card.Subtitle>Name</Card.Subtitle>
+                    <Card.Text>{deEntitize(author.first)} {deEntitize(author.last)}</Card.Text>
+                  </Card.Body>
+                  {author.nationality && (
+                    <Card.Body>
+                      <Card.Subtitle>Nationality</Card.Subtitle>
+                      <Card.Text>{author.nationality}</Card.Text>
+                    </Card.Body>
+                  )}
+                  {author.dates && (
+                    <Card.Body>
+                      <Card.Subtitle>Dates</Card.Subtitle>
+                      <Card.Text>{author.dates}</Card.Text>
+                    </Card.Body>
+                  )}
+                  {author.type && (
+                    <Card.Body>
+                      <Card.Subtitle>Type</Card.Subtitle>
+                      <Card.Text>{author.type}</Card.Text>
+                    </Card.Body>
+                  )}
+                </Card>
+              </Col>
+              <Col md={8} xl={9}>
+                <Card>
+                  <Card.Body>
+                    <Card.Subtitle>Biography</Card.Subtitle>
+                    {author.bio ? (
+                      <Card.Body dangerouslySetInnerHTML={{ __html: deEntitize(author.bio) }} />
+                    ) : (
+                      <Card.Text>No biography available.</Card.Text>
+                    )}
+                  </Card.Body>
+                  {books.length > 0 && (
+                    <Card.Body>
+                      <Card.Subtitle>Books by this Author</Card.Subtitle>
+                      <ListGroup variant="flush">
+                        {books.map((book) => (
+                          <ListGroup.Item key={book.cs_rid}>
+                            <Link href={`/legacy-library/book/${slugify(book.reference || 'unknown')}`}>
+                              {deEntitize(book.title)}
+                            </Link>
+                            {book.publication_date && (
+                              <small className="text-muted"> ({book.publication_date})</small>
+                            )}
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    </Card.Body>
+                  )}
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+        </BoxStyled>
+      </PageWrapper>
+    </>
+  )
 }
