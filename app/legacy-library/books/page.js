@@ -9,8 +9,7 @@ import styled from "styled-components"
 import Link from 'next/link'
 import { deEntitize } from '../../../src/utils'
 import { getAllBooks } from '../../../lib/queries'
-
-const slugify = require('@sindresorhus/slugify')
+import { slugify } from '@sindresorhus/slugify'
 
 const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 

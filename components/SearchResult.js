@@ -7,7 +7,7 @@ import {
   Index,
   Snippet,
 } from "react-instantsearch-dom"
-const slugify = require('@sindresorhus/slugify')
+import { slugify } from '@sindresorhus/slugify'
 
 const HitCount = connectStateResults(({ searchState, searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits

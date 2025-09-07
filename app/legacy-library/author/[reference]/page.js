@@ -7,8 +7,7 @@ import { Title, Box } from "../../../../src/components/Core"
 import styled from "styled-components"
 import Link from 'next/link'
 import { deEntitize } from '../../../../src/utils'
-
-const slugify = require('@sindresorhus/slugify')
+import { slugify } from '@sindresorhus/slugify'
 
 const searchIndices = [{ name: `reshelvingalexandria`, title: `reshelvingalexandria` }]
 
