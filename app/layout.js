@@ -3,8 +3,7 @@ import '../src/assets/fonts/fontawesome-5/css/all.css'
 import '../src/assets/fonts/icon-font/css/icons.css'
 import '../src/assets/fonts/typography-font/typo.css'
 import './globals.css'
-import { ThemeProvider } from 'styled-components'
-import theme from '../src/utils/theme'
+import ThemeWrapper from './ThemeWrapper'
 
 export const metadata = {
   title: 'Omega Next.js',
@@ -15,9 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ThemeProvider theme={theme}>
+        <ThemeWrapper>
           {children}
-        </ThemeProvider>
+        </ThemeWrapper>
       </body>
     </html>
   )
