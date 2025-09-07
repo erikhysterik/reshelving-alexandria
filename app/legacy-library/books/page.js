@@ -134,8 +134,8 @@ export default function BooksPage() {
                             >
                               <td>{deEntitize(book.title)}</td>
                               <td>
-                                {deEntitize(book.bookauthors?.at(0)?.first ?? "")}{" "}
-                                {deEntitize(book.bookauthors?.at(0)?.last ?? "")}
+                                {deEntitize(book.author_first ?? "")}{" "}
+                                {deEntitize(book.author_last ?? "")}
                               </td>
                               <td>{book.publication_date}</td>
                             </tr>
