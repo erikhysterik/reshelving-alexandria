@@ -31,20 +31,35 @@ const BoxStyled = styled(Box)`
   }
 `
 
-export default function BooksPage({ books }) {
+export default function BooksPage() {
   const router = useRouter()
+  const [books, setBooks] = React.useState([])
   const [tagList, setTagList] = React.useState([])
   const [currPage, setCurrPage] = React.useState(1)
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    afterPageClicked(1)
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch('/api/books')
+        const data = await response.json()
+        setBooks(data)
+        setLoading(false)
+        afterPageClicked(1, data)
+      } catch (error) {
+        console.error('Error fetching books:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchBooks()
   }, [])
 
-  const afterPageClicked = (page_number) => {
+  const afterPageClicked = (page_number, bookData = books) => {
     setCurrPage(page_number)
 
-    let endex = Math.min((page_number * 50), books.length)
-    setTagList(books.slice(((page_number - 1) * 50), endex))
+    let endex = Math.min((page_number * 50), bookData.length)
+    setTagList(bookData.slice(((page_number - 1) * 50), endex))
   }
 
   const handleRowClick = (reference) => {
@@ -85,7 +100,7 @@ export default function BooksPage({ books }) {
                   totPages={books.length % 50 ? books.length / 50 + 1 : books.length / 50}
                   currentPage={currPage}
                   pageClicked={(ele) => {
-                    afterPageClicked(ele)
+                    afterPageClicked(ele, books)
                   }}
                 >
                   <Table striped bordered hover size="sm" variant="dark">
@@ -97,22 +112,36 @@ export default function BooksPage({ books }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {tagList.map((book, ind) => {
-                        return (
-                          <tr
-                            style={{ cursor: "pointer" }}
-                            key={book.cs_rid + ind}
-                            onClick={() => handleRowClick(book.reference)}
-                          >
-                            <td>{deEntitize(book.title)}</td>
-                            <td>
-                              {deEntitize(book.bookauthors?.at(0)?.first ?? "")}{" "}
-                              {deEntitize(book.bookauthors?.at(0)?.last ?? "")}
-                            </td>
-                            <td>{book.publication_date}</td>
-                          </tr>
-                        )
-                      })}
+                      {loading ? (
+                        <tr>
+                          <td colSpan="3" className="text-center">
+                            Loading books...
+                          </td>
+                        </tr>
+                      ) : tagList.length === 0 ? (
+                        <tr>
+                          <td colSpan="3" className="text-center">
+                            No books found.
+                          </td>
+                        </tr>
+                      ) : (
+                        tagList.map((book, ind) => {
+                          return (
+                            <tr
+                              style={{ cursor: "pointer" }}
+                              key={book.cs_rid + ind}
+                              onClick={() => handleRowClick(book.reference)}
+                            >
+                              <td>{deEntitize(book.title)}</td>
+                              <td>
+                                {deEntitize(book.bookauthors?.at(0)?.first ?? "")}{" "}
+                                {deEntitize(book.bookauthors?.at(0)?.last ?? "")}
+                              </td>
+                              <td>{book.publication_date}</td>
+                            </tr>
+                          )
+                        })
+                      )}
                     </tbody>
                   </Table>
                 </CustomPagination>
@@ -125,22 +154,4 @@ export default function BooksPage({ books }) {
   )
 }
 
-export async function getStaticProps() {
-  try {
-    const books = await getAllBooks()
-    return {
-      props: {
-        books
-      },
-      revalidate: 3600 // Regenerate every hour
-    }
-  } catch (error) {
-    console.error('Error fetching books:', error)
-    return {
-      props: {
-        books: []
-      }
-    }
-  }
-}
 
