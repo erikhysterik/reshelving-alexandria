@@ -1,3 +1,5 @@
+"use client";
+
 import { notFound } from 'next/navigation'
 import { getAuthorByReference, getAllAuthorReferences, getAuthorBooks } from '../../../../lib/queries'
 import PageWrapper from '../../../../components/PageWrapper'
