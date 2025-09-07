@@ -23,7 +23,7 @@ function TagSection({ tagkey, tags, header }) {
       <Accordion.Body>
         {tags?.split(',').filter(Boolean).map((v, i) => (
           <><Badge key={i} bg='info' text="light">
-            <Link href={`/legacy-library/tag/${v.trim()}`}>{v.trim()}</Link>
+            <Link href={`/legacy-library/tag/${v.trim() || 'unknown'}`}>{v.trim() || 'Unknown'}</Link>
           </Badge><span> </span></>
         )) ?? ""}
       </Accordion.Body>

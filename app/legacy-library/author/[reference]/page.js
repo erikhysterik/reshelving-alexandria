@@ -89,7 +89,7 @@ export default async function AuthorPage({ params }) {
                     <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/authors' }} title="Authors" active={false}>
                       Authors
                     </BreadcrumbItem>
-                    <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/author/${author.reference}` }} title={`${deEntitize(author.first)} ${deEntitize(author.last)}`} active={true}>
+                    <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/author/${author.reference || 'unknown'}` }} title={`${deEntitize(author.first)} ${deEntitize(author.last)}`} active={true}>
                       {deEntitize(author.first)} {deEntitize(author.last)}
                     </BreadcrumbItem>
                   </Breadcrumb>
@@ -151,7 +151,7 @@ export default async function AuthorPage({ params }) {
                         <ListGroup variant="flush">
                           {authorBooks.map((book) => (
                             <ListGroup.Item key={book.cs_rid}>
-                              <Link href={`/legacy-library/book/${slugify(book.reference)}`}>
+                              <Link href={`/legacy-library/book/${slugify(book.reference || 'unknown')}`}>
                                 {deEntitize(book.title)}
                               </Link>
                               {book.publication_date && (
