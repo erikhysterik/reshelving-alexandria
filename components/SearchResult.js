@@ -7,7 +7,7 @@ import {
   Index,
   Snippet,
 } from "react-instantsearch-dom"
-import { slugify } from '@sindresorhus/slugify'
+import slugify from '@sindresorhus/slugify'
 
 const HitCount = connectStateResults(({ searchState, searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits
@@ -23,12 +23,21 @@ const HitCount = connectStateResults(({ searchState, searchResults }) => {
 })
 
 const PageHit = ({ hit }) => {
-  if (!hit || !hit.reference) {
+  // More robust validation
+  if (!hit) {
     return null
   }
 
-  const slugifiedReference = slugify(hit.reference)
-  if (!slugifiedReference) {
+  // Check if hit has the required properties
+  const title = hit.title || hit._highlightResult?.title?.value || 'Untitled'
+  const reference = hit.reference || hit.objectID
+
+  if (!reference) {
+    return null
+  }
+
+  const slugifiedReference = slugify(reference)
+  if (!slugifiedReference || slugifiedReference === 'undefined' || slugifiedReference === 'null') {
     return null
   }
 
