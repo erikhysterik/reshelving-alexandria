@@ -27,9 +27,14 @@ const PageHit = ({ hit }) => {
     return null
   }
 
+  const slugifiedReference = slugify(hit.reference)
+  if (!slugifiedReference) {
+    return null
+  }
+
   return (
     <div>
-      <Link href={`/legacy-library/book/${slugify(hit.reference)}`}>
+      <Link href={`/legacy-library/book/${slugifiedReference}`}>
         <h4>
           <Highlight attribute="title" hit={hit} tagName="mark" />
         </h4>

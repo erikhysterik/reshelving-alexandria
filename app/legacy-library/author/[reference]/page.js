@@ -86,8 +86,8 @@ export default async function AuthorPage({ params }) {
                     <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={false}>
                       Legacy Library
                     </BreadcrumbItem>
-                    <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/authors' }} title="Authors" active={false}>
-                      Authors
+                    <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library' }} title="Legacy Library" active={false}>
+                      Legacy Library
                     </BreadcrumbItem>
                     <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/author/${author.reference || 'unknown'}` }} title={`${deEntitize(author.first)} ${deEntitize(author.last)}`} active={true}>
                       {deEntitize(author.first)} {deEntitize(author.last)}

@@ -132,7 +132,7 @@ export default function BookDetails({ data }) {
               <BreadcrumbItem linkAs={Link} linkProps={{ href: '/legacy-library/books' }} title="Books">
                 Books
               </BreadcrumbItem>
-              <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/book/${mysqlBook.reference}` }} title={deEntitize(mysqlBook.title)} active>
+              <BreadcrumbItem linkAs={Link} linkProps={{ href: `/legacy-library/book/${mysqlBook.reference || 'unknown'}` }} title={deEntitize(mysqlBook.title)} active>
                 {deEntitize(mysqlBook.title)}
               </BreadcrumbItem>
             </Breadcrumb>
