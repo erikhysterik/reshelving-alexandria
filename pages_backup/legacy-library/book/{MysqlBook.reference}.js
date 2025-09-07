@@ -1,12 +1,12 @@
 import * as React from "react"
 import { graphql } from "gatsby"
-import PageWrapper from "../../../components/PageWrapper";
+import PageWrapper from "../../../../components/PageWrapper";
+import SearchWidget from '../../../../components/SearchWidget'
 import { Badge, Container, Row, Col, Breadcrumb, BreadcrumbItem, Card, Accordion, Button } from "react-bootstrap";
 import { Title, Box } from "../../../components/Core";
 import styled from "styled-components";
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import { deEntitize } from "../../../utils";
-import SearchWidget from '../../../components/SearchWidget'
 
 const slugify = require('@sindresorhus/slugify');
 
@@ -53,7 +53,7 @@ function TagSection(props) {
             <Accordion.Item eventKey={props.tagkey}>
                 <Accordion.Header>{props.header}</Accordion.Header>
                 <Accordion.Body>
-                    { props.tags?.split(',').filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
+                    { props.tags?.split(',').filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link href={"/legacy-library/tag/" + slugify(v.trim(), {lower: true})}>{v.trim()}</Link></Badge><span> </span></>) ?? ""}
                 </Accordion.Body>
             </Accordion.Item>
         </>
@@ -155,9 +155,9 @@ function BookDetails(props) {
       <Row className="d-flex align-items-center">
         <Col>
           <Breadcrumb>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/books'}} title="Books" active={false} >Books</BreadcrumbItem>
-          <BreadcrumbItem linkAs={Link} linkProps={{to: '/legacy-library/book/' + mysqlBook.reference}} title={deEntitize(mysqlBook.title)} active={true} >{deEntitize(mysqlBook.title)}</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{href: '/legacy-library'}} title="Legacy Library" active={false} >Legacy Library</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{href: '/legacy-library/books'}} title="Books" active={false} >Books</BreadcrumbItem>
+          <BreadcrumbItem linkAs={Link} linkProps={{href: '/legacy-library/book/' + mysqlBook.reference}} title={deEntitize(mysqlBook.title)} active={true} >{deEntitize(mysqlBook.title)}</BreadcrumbItem>
           </Breadcrumb>
          </Col>
          <Col xs={2}>
@@ -195,7 +195,7 @@ function BookDetails(props) {
                   </Card.Subtitle>
                   { mysqlBook.bookauthors?.length > 0 ? mysqlBook.bookauthors?.map((a) => (
                      <div>
-                     <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
+                     <Link href={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
                      </div>
                   )) : <Card.Text>N/A</Card.Text>
                   }
@@ -206,8 +206,8 @@ function BookDetails(props) {
                       Illustrator{ mysqlBook.bookillustrators?.length > 1 && "s" }:
                   </Card.Subtitle>
                   { mysqlBook.bookillustrators?.map((a) => (
-                     <div> 
-                     <Link to={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
+                     <div>
+                     <Link href={"/legacy-library/author/" + slugify(a.reference)}>{deEntitize(a.first) + " " + deEntitize(a.last)}</Link>
                      </div>
                   ))
                   }
@@ -223,7 +223,7 @@ function BookDetails(props) {
                   </Card.Subtitle>
                   { mysqlBook.publication_date ?
                      <div>
-                     <Link to={"/legacy-library/books/published/" + slugify(mysqlBook.noncirca_pub_date)}>{mysqlBook.publication_date}</Link>
+                     <Link href={"/legacy-library/books/published/" + slugify(mysqlBook.noncirca_pub_date)}>{mysqlBook.publication_date}</Link>
                      </div>
                      : <Card.Text>N/A</Card.Text>
                   }
@@ -239,8 +239,8 @@ function BookDetails(props) {
                     <Card.Subtitle>
                       Series:
                   </Card.Subtitle>
-                  <div> 
-                     <Link to={"/legacy-library/series/" + slugify(mysqlBook.series_reference)}>{deEntitize(mysqlBook.series_name)}</Link>
+                  <div>
+                     <Link href={"/legacy-library/series/" + slugify(mysqlBook.series_reference)}>{deEntitize(mysqlBook.series_name)}</Link>
                   </div>
                   </>}
               </Card.Body>
@@ -276,25 +276,25 @@ function BookDetails(props) {
               <Accordion.Item eventKey="0">
                 <Accordion.Header>Major</Accordion.Header>
                 <Accordion.Body>
-                    { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/timeperiod/major/" + slugify(v.reference, {lower: true})}>{v.name.trim()}</Link></Badge><span> </span></>) ?? ""}
+                    { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link href={"/legacy-library/books/timeperiod/major/" + slugify(v.reference, {lower: true})}>{v.name.trim()}</Link></Badge><span> </span></>) ?? ""}
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>Minor</Accordion.Header>
                 <Accordion.Body>
-                    { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/timeperiod/" + slugify(v.region, {lower: true}) + "/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
+                    { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link href={"/legacy-library/books/timeperiod/" + slugify(v.region, {lower: true}) + "/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="2">
                 <Accordion.Header>Centuries</Accordion.Header>
                 <Accordion.Body>
-                    { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/century/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
+                    { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link href={"/legacy-library/books/century/" + slugify(v.reference, {lower: true})}>{v.name}</Link></Badge><span> </span></>) ?? ""}
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="3">
                 <Accordion.Header>Decades</Accordion.Header>
                 <Accordion.Body>
-                    { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link to={"/legacy-library/books/decade/" + slugify(v.reference, {lower: true})}>{v.decade}</Link></Badge><span> </span></>) ?? ""}
+                    { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => <><Badge key={i} bg='info' text="light"><Link href={"/legacy-library/books/decade/" + slugify(v.reference, {lower: true})}>{v.decade}</Link></Badge><span> </span></>) ?? ""}
                 </Accordion.Body>
             </Accordion.Item>
               </Accordion>
