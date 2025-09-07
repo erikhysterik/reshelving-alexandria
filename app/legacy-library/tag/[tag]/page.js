@@ -82,7 +82,7 @@ export default function TagDetailPage({ params }) {
                     <Link href="/legacy-library/tag">Tags</Link>
                   </BreadcrumbItem>
                   <BreadcrumbItem active>
-                    <Link href={`/legacy-library/tag/${params.tag}`}>{params.tag}</Link>
+                    <Link href={`/legacy-library/tag/${params.tag}`}>{decodeURIComponent(params.tag)}</Link>
                   </BreadcrumbItem>
                 </Breadcrumb>
               </Col>
@@ -93,7 +93,7 @@ export default function TagDetailPage({ params }) {
             <Row className="justify-content-center">
               <Col lg="11" className="mb-4 mb-lg-5">
                 <Box>
-                  <Title variant="hero">Books Tagged "{params.tag}"</Title>
+                  <Title variant="hero">Books Tagged "{decodeURIComponent(params.tag)}"</Title>
                 </Box>
               </Col>
             </Row>
@@ -124,7 +124,7 @@ export default function TagDetailPage({ params }) {
                       ) : tagList.length === 0 ? (
                         <tr>
                           <td colSpan="3" className="text-center">
-                            No books found with tag "{params.tag}".
+                            No books found with tag "{decodeURIComponent(params.tag)}".
                           </td>
                         </tr>
                       ) : (
