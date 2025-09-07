@@ -15,7 +15,7 @@ const HitCount = connectStateResults(({ searchState, searchResults }) => {
 
   return hitCount > 0 ? (
     <div className="HitCount">
-      <Link href={`/legacy-library/search/?q=${encodeURIComponent(query)}`}>
+      <Link href={`/legacy-library/search?q=${encodeURIComponent(query)}`}>
         {hitCount} result{hitCount !== 1 ? `s` : ``}
       </Link>
     </div>

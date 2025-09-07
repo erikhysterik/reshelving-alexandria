@@ -111,6 +111,14 @@ const SearchResults = ({ searchState, searchResults }) => {
   const hasQuery = searchState && searchState.query && searchState.query.trim() !== ''
   const hasResults = searchResults && searchResults.nbHits > 0
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('SearchResults - searchState:', searchState)
+    console.log('SearchResults - searchResults:', searchResults)
+    console.log('SearchResults - hasQuery:', hasQuery)
+    console.log('SearchResults - hasResults:', hasResults)
+  }, [searchState, searchResults, hasQuery, hasResults])
+
   if (!hasQuery) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -142,23 +150,68 @@ const SearchResults = ({ searchState, searchResults }) => {
   )
 }
 
-const ConnectedSearchResults = connectStateResults(SearchResults)
+const ConnectedSearchResults = connectStateResults((props) => {
+  console.log('ConnectedSearchResults props:', props)
+  return <SearchResults {...props} />
+})
 
 function SearchPageContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
   const [mounted, setMounted] = React.useState(false)
+  const [searchResults, setSearchResults] = React.useState(null)
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     setMounted(true)
-  }, [])
+    // Debug logging
+    console.log('Search page loaded with query:', query)
+    console.log('Search params:', Object.fromEntries(searchParams.entries()))
+    console.log('Algolia config:', {
+      appId: process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
+      searchKey: process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY,
+      indexName: searchIndices[0].name
+    })
+  }, [query, searchParams])
+
+  React.useEffect(() => {
+    // Perform search when query changes
+    if (query && mounted && searchClient) {
+      setLoading(true)
+      console.log('Performing search for:', query)
+      searchClient.search([{
+        indexName: searchIndices[0].name,
+        query: query,
+        params: {
+          hitsPerPage: 20
+        }
+      }]).then(result => {
+        console.log('Search completed:', result)
+        setSearchResults(result.results[0])
+        setLoading(false)
+      }).catch(error => {
+        console.error('Search error:', error)
+        setLoading(false)
+      })
+    }
+  }, [query, mounted])
 
   const searchClient = React.useMemo(
-    () =>
-      algoliasearch(
+    () => {
+      const client = algoliasearch(
         process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
         process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY
-      ),
+      )
+
+      // Add error handling and logging
+      const originalSearch = client.search
+      client.search = (...args) => {
+        console.log('Algolia search called with:', args)
+        return originalSearch.apply(client, args)
+      }
+
+      return client
+    },
     []
   )
 
@@ -188,9 +241,36 @@ function SearchPageContent() {
                 <Box>
                   <Title variant="hero">Search Results</Title>
                   {query && (
-                    <p style={{ marginTop: '1rem', color: '#6c757d' }}>
-                      Searching for: <strong>"{query}"</strong>
-                    </p>
+                    <div style={{ marginTop: '1rem', color: '#6c757d' }}>
+                      <p>Searching for: <strong>"{query}"</strong></p>
+                      <button
+                        onClick={() => {
+                          if (searchClient) {
+                            searchClient.search([{
+                              indexName: searchIndices[0].name,
+                              query: query,
+                              params: { hitsPerPage: 20 }
+                            }]).then(result => {
+                              console.log('Manual search result:', result)
+                              alert(`Search completed! Found ${result.results[0]?.hits?.length || 0} results`)
+                            }).catch(error => {
+                              console.error('Manual search error:', error)
+                              alert('Search failed: ' + error.message)
+                            })
+                          }
+                        }}
+                        style={{
+                          padding: '0.5rem 1rem',
+                          background: '#007bff',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Test Search
+                      </button>
+                    </div>
                   )}
                 </Box>
               </Col>
@@ -203,14 +283,26 @@ function SearchPageContent() {
                       <div style={{ textAlign: 'center', padding: '2rem' }}>
                         <div>Loading search...</div>
                       </div>
+                    ) : loading ? (
+                      <div style={{ textAlign: 'center', padding: '2rem' }}>
+                        <div>Searching...</div>
+                      </div>
+                    ) : searchResults ? (
+                      <div>
+                        <div style={{ marginBottom: '1rem', color: '#6c757d' }}>
+                          Found {searchResults.nbHits} result{searchResults.nbHits !== 1 ? 's' : ''} for "{query}"
+                        </div>
+                        <ListGroup variant="flush">
+                          {searchResults.hits.map((hit, index) => (
+                            <HitComponent key={hit.objectID || index} hit={hit} />
+                          ))}
+                        </ListGroup>
+                      </div>
                     ) : (
-                      <InstantSearch
-                        searchClient={searchClient}
-                        indexName={searchIndices[0].name}
-                        searchState={{ query }}
-                      >
-                        <ConnectedSearchResults />
-                      </InstantSearch>
+                      <div style={{ textAlign: 'center', padding: '2rem' }}>
+                        <h4>No results found</h4>
+                        <p>No books match your search for "{query}". Try different keywords.</p>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
