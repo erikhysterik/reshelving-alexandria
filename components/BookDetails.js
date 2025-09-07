@@ -167,7 +167,7 @@ export default function BookDetails({ data }) {
                 <Card.Subtitle>Author{mysqlBook.bookauthors?.length > 1 && "s"}:</Card.Subtitle>
                 {mysqlBook.bookauthors?.length > 0 ? mysqlBook.bookauthors?.map((a) => (
                   <div key={a.cs_rid}>
-                    <Link href={`/legacy-library/author/${a.reference}`}>
+                    <Link href={`/legacy-library/author/${a.reference || 'unknown'}`}>
                       {deEntitize(a.first) + " " + deEntitize(a.last)}
                     </Link>
                   </div>
@@ -178,7 +178,7 @@ export default function BookDetails({ data }) {
                   <Card.Subtitle>Illustrator{mysqlBook.bookillustrators?.length > 1 && "s"}:</Card.Subtitle>
                   {mysqlBook.bookillustrators?.map((a) => (
                     <div key={a.cs_rid}>
-                      <Link href={`/legacy-library/author/${a.reference}`}>
+                      <Link href={`/legacy-library/author/${a.reference || 'unknown'}`}>
                         {deEntitize(a.first) + " " + deEntitize(a.last)}
                       </Link>
                     </div>
@@ -191,7 +191,7 @@ export default function BookDetails({ data }) {
                 <Card.Subtitle>Date:</Card.Subtitle>
                 {mysqlBook.publication_date ? (
                   <div>
-                    <Link href={`/legacy-library/books/published/${mysqlBook.noncirca_pub_date}`}>
+                    <Link href={`/legacy-library/books/published/${mysqlBook.noncirca_pub_date || 'unknown'}`}>
                       {mysqlBook.publication_date}
                     </Link>
                   </div>
@@ -202,7 +202,7 @@ export default function BookDetails({ data }) {
                   <>
                     <Card.Subtitle>Series:</Card.Subtitle>
                     <div>
-                      <Link href={`/legacy-library/series/${mysqlBook.series_reference}`}>
+                      <Link href={`/legacy-library/series/${mysqlBook.series_reference || 'unknown'}`}>
                         {deEntitize(mysqlBook.series_name)}
                       </Link>
                     </div>
@@ -236,7 +236,7 @@ export default function BookDetails({ data }) {
                       <Accordion.Body>
                         { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => (
                           <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/timeperiod/major/${v.reference}`}>{v.name.trim()}</Link>
+                            <Link href={`/legacy-library/books/timeperiod/major/${v.reference || 'unknown'}`}>{v.name?.trim() || 'Unknown'}</Link>
                           </Badge><span> </span></>
                         )) ?? ""}
                       </Accordion.Body>
@@ -246,7 +246,7 @@ export default function BookDetails({ data }) {
                       <Accordion.Body>
                         { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => (
                           <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/timeperiod/${v.region}/${v.reference}`}>{v.name}</Link>
+                            <Link href={`/legacy-library/books/timeperiod/${v.region || 'unknown'}/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
                           </Badge><span> </span></>
                         )) ?? ""}
                       </Accordion.Body>
@@ -256,7 +256,7 @@ export default function BookDetails({ data }) {
                       <Accordion.Body>
                         { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => (
                           <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/century/${v.reference}`}>{v.name}</Link>
+                            <Link href={`/legacy-library/books/century/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
                           </Badge><span> </span></>
                         )) ?? ""}
                       </Accordion.Body>
@@ -266,7 +266,7 @@ export default function BookDetails({ data }) {
                       <Accordion.Body>
                         { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => (
                           <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/decade/${v.reference}`}>{v.decade}</Link>
+                            <Link href={`/legacy-library/books/decade/${v.reference || 'unknown'}`}>{v.decade || 'Unknown'}</Link>
                           </Badge><span> </span></>
                         )) ?? ""}
                       </Accordion.Body>
