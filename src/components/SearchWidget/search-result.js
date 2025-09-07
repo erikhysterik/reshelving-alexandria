@@ -1,4 +1,4 @@
-import { Link } from "gatsby"
+import Link from "next/link"
 import { default as React } from "react"
 import {
   connectStateResults,
@@ -14,23 +14,34 @@ const HitCount = connectStateResults(({ searchState, searchResults }) => {
 
   return hitCount > 0 ? (
     <div className="HitCount">
-      <Link to={"/legacy-library/search/?q=" + searchState.query} >
-      {hitCount} result{hitCount !== 1 ? `s` : ``}
+      <Link href={`/legacy-library/search/?q=${encodeURIComponent(searchState?.query || '')}`}>
+        {hitCount} result{hitCount !== 1 ? `s` : ``}
       </Link>
     </div>
   ) : null
 })
 
-const PageHit = ({ hit }) => (
-  <div>
-    <Link to={"/legacy-library/book/" + slugify(hit.reference)}>
-      <h4>
-        <Highlight attribute="title" hit={hit} tagName="mark" />
-      </h4>
-    </Link>
-    <Snippet attribute="excerpt" hit={hit} tagName="mark" />
-  </div>
-)
+const PageHit = ({ hit }) => {
+  if (!hit || !hit.reference) {
+    return null
+  }
+
+  const slugifiedReference = slugify(hit.reference)
+  if (!slugifiedReference || slugifiedReference === 'undefined' || slugifiedReference === 'null') {
+    return null
+  }
+
+  return (
+    <div>
+      <Link href={`/legacy-library/book/${slugifiedReference}`}>
+        <h4>
+          <Highlight attribute="title" hit={hit} tagName="mark" />
+        </h4>
+      </Link>
+      <Snippet attribute="excerpt" hit={hit} tagName="mark" />
+    </div>
+  )
+}
 
 const HitsInIndex = ({ index }) => (
   <Index indexName={index.name}>
