@@ -237,9 +237,12 @@ export default function BookDetails({ data }) {
                       <Accordion.Header>Major</Accordion.Header>
                       <Accordion.Body>
                         { mysqlBook.bookmajortimeperiods?.filter(Boolean).map((v, i) => (
-                          <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/timeperiod/major/${v.reference || 'unknown'}`}>{v.name?.trim() || 'Unknown'}</Link>
-                          </Badge><span> </span></>
+                          <React.Fragment key={`major-${v.cs_rid || i}`}>
+                            <Badge bg='info' text="light">
+                              <Link href={`/legacy-library/books/timeperiod/major/${v.reference || 'unknown'}`}>{v.name?.trim() || 'Unknown'}</Link>
+                            </Badge>
+                            <span> </span>
+                          </React.Fragment>
                         )) ?? ""}
                       </Accordion.Body>
                     </Accordion.Item>
@@ -247,9 +250,12 @@ export default function BookDetails({ data }) {
                       <Accordion.Header>Minor</Accordion.Header>
                       <Accordion.Body>
                         { mysqlBook.bookminortimeperiods?.filter(Boolean).map((v, i) => (
-                          <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/timeperiod/${v.region || 'unknown'}/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
-                          </Badge><span> </span></>
+                          <React.Fragment key={`minor-${v.cs_rid || i}`}>
+                            <Badge bg='info' text="light">
+                              <Link href={`/legacy-library/books/timeperiod/${v.region || 'unknown'}/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
+                            </Badge>
+                            <span> </span>
+                          </React.Fragment>
                         )) ?? ""}
                       </Accordion.Body>
                     </Accordion.Item>
@@ -257,9 +263,12 @@ export default function BookDetails({ data }) {
                       <Accordion.Header>Centuries</Accordion.Header>
                       <Accordion.Body>
                         { mysqlBook.bookcenturies?.filter(Boolean).map((v, i) => (
-                          <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/century/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
-                          </Badge><span> </span></>
+                          <React.Fragment key={`century-${v.cs_rid || i}`}>
+                            <Badge bg='info' text="light">
+                              <Link href={`/legacy-library/books/century/${v.reference || 'unknown'}`}>{v.name || 'Unknown'}</Link>
+                            </Badge>
+                            <span> </span>
+                          </React.Fragment>
                         )) ?? ""}
                       </Accordion.Body>
                     </Accordion.Item>
@@ -267,9 +276,12 @@ export default function BookDetails({ data }) {
                       <Accordion.Header>Decades</Accordion.Header>
                       <Accordion.Body>
                         { mysqlBook.bookdecades?.filter(Boolean).map((v, i) => (
-                          <><Badge key={i} bg='info' text="light">
-                            <Link href={`/legacy-library/books/decade/${v.reference || 'unknown'}`}>{v.decade || 'Unknown'}</Link>
-                          </Badge><span> </span></>
+                          <React.Fragment key={`decade-${v.cs_rid || i}`}>
+                            <Badge bg='info' text="light">
+                              <Link href={`/legacy-library/books/decade/${v.reference || 'unknown'}`}>{v.decade || 'Unknown'}</Link>
+                            </Badge>
+                            <span> </span>
+                          </React.Fragment>
                         )) ?? ""}
                       </Accordion.Body>
                     </Accordion.Item>
